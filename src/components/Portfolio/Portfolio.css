@@ -1,0 +1,152 @@
+#portfolio {
+  position: relative;
+}
+
+#portfolio h2 {
+  margin: 50px;
+  text-align: center;
+  font-size: 80px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: 100px;
+  margin-right: 100px;
+  gap: 60px;
+}
+
+.portfolio-block {
+  display: flex;
+  flex: 1 1 25%;
+  border: 2px solid #000;
+  flex-direction: column;
+  margin-top: 0px;
+  padding-top: 10px;
+  padding: 10px;
+  box-shadow: 5px 6px 0px 4px rgba(0, 0, 0, 0.25);
+  align-items: center;
+}
+
+.portfolio-block > img {
+  width: 90%;
+  border: 2px solid #000;
+  margin-top: 34px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.portfolio-text {
+  padding-left: 23px;
+  padding-right: 23px;
+  margin: 0;
+}
+
+.portfolio-text h3 {
+  font-size: 24px;
+}
+
+.portfolio-text p {
+  font-size: 18px;
+}
+
+.project-button {
+  display: inline-flex;
+  justify-content: center;
+  padding: 5px 10px;
+  background-color: #000;
+  color: #fff;
+  font-size: 24px;
+  text-decoration: none;
+  border: 2px solid #000;
+  align-items: right;
+  margin-bottom: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.project-button .arrow {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+  transform: rotate(320deg);
+}
+
+.project-button:hover {
+  background-color: #ffea00;
+  transform: scale(1.05);
+}
+
+.project-button:active {
+  background-color: #ffea00;
+  transform: scale(0.98);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.project-button:hover .arrow {
+  transform: translateX(5px);
+}
+
+@media screen and (max-width: 768px) {
+  #portfolio {
+    margin: 0;
+  }
+
+  .container {
+    margin: 40px;
+    gap: 10px;
+  }
+
+  .portfolio-block {
+    width: 90%;
+  }
+
+  #portfolio h2 {
+    text-align: center;
+    font-size: 80px;
+  }
+
+  .container {
+    gap: 60px;
+    justify-content: space-between;
+  }
+
+  .portfolio-text {
+    padding: 10px;
+  }
+
+  .portfolio-text h3 {
+    font-size: 18px;
+  }
+
+  .portfolio-text p {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  #portfolio h2 {
+    text-align: center;
+    font-size: 30px;
+  }
+
+  .container {
+    margin: 20px;
+  }
+
+  .portfolio-block {
+    flex: 1 1 100%;
+  }
+
+  .portfolio-text {
+    padding: 10px;
+  }
+
+  .portfolio-text h3 {
+    font-size: 18px;
+  }
+
+  .portfolio-text p {
+    font-size: 15px;
+  }
+}

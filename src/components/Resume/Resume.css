@@ -1,0 +1,166 @@
+.resume-section {
+  padding: 80px 0;
+  margin: 40px 83px;
+  background: #fff;
+
+  min-height: calc(100vh - 200px);
+}
+
+.resume-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  color: #000;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.resume-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.resume-block {
+  margin-bottom: 40px;
+  padding: 30px;
+  border: 5px solid #000;
+  background: #fff;
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.25);
+}
+
+.resume-block:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.25);
+  background: #ffea00;
+  transition: all 0.3s ease;
+}
+
+.resume-block h3 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  font-family: "Space Grotesk", sans-serif;
+  color: #000;
+}
+
+.entry {
+  margin-bottom: 30px;
+}
+
+.entry:last-child {
+  margin-bottom: 0;
+}
+
+.entry h4 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-family: "Space Grotesk", sans-serif;
+  color: #000;
+}
+
+.institution {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.date {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.entry ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.entry li {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.entry li:before {
+  content: "→";
+  margin-right: 10px;
+  color: #000;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.skill-category {
+  margin-bottom: 20px;
+}
+
+.skill-category h4 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.skill-category p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 768px) {
+  .resume-section {
+    margin: 40px 20px;
+    padding: 40px 0;
+  }
+
+  .resume-container {
+    padding: 0 20px;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-block {
+    padding: 20px;
+  }
+
+  .resume-block h3 {
+    font-size: 1.8rem;
+  }
+
+  .entry h4 {
+    font-size: 1.3rem;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .resume-section {
+    margin: 20px;
+    padding: 30px 0;
+  }
+
+  .resume-section h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+
+  .resume-container {
+    padding: 0 15px;
+  }
+
+  .resume-block {
+    padding: 15px;
+  }
+
+  .entry h4 {
+    font-size: 1.2rem;
+  }
+
+  .institution,
+  .date,
+  .entry li,
+  .skill-category p {
+    font-size: 1rem;
+  }
+}
