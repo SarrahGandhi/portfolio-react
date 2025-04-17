@@ -9,10 +9,21 @@ const mongoose = require("mongoose");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Set up CORS to allow requests from your Vercel frontend
+app.use(
+  cors({
+    origin: [
+      "https://portfolio-react-mu-pearl.vercel.app",
+      "http://localhost:3000",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cors());
 
 const projectSchema = new mongoose.Schema({
   title: String,
@@ -26,8 +37,6 @@ app.get("/", async (req, res) => {
   const projects = await Project.find({});
   res.send(projects);
 });
-
-// Projects API endpoint
 app.get("/api/projects", async (req, res) => {
   try {
     await db.connectDB();
@@ -38,7 +47,6 @@ app.get("/api/projects", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch projects" });
   }
 });
-
 app.listen(port, () => {
   console.log(`Server is running on port http://localhost:${port}`);
 });

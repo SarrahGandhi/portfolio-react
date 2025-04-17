@@ -9,34 +9,20 @@ const Portfolio = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Map of default images you can use for projects
-  const defaultImages = {
-    BreadCrumbs: breadCrumbs,
-    "Be my Valentine": valentines,
-    "Interactive Solar System": solarSystem,
-  };
-
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/projects");
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
+        setLoading(true);
+        const response = await fetch(
+          "https://portfolio-react-c64m.onrender.com/api/projects"
+        );
         const data = await response.json();
-
-        // Add image property to each project if not provided by API
-        const projectsWithImages = data.map((project) => ({
-          ...project,
-          image: project.image || defaultImages[project.title] || solarSystem, // Fallback to a default image
-          link: project.link || "#", // Provide a fallback link if none exists
-        }));
-
-        setProjects(projectsWithImages);
-        setLoading(false);
+        setProjects(data);
+        setError(null);
       } catch (error) {
         console.error("Error fetching projects:", error);
         setError("Failed to load projects");
+      } finally {
         setLoading(false);
       }
     };
