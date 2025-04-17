@@ -1,0 +1,98 @@
+.project-details {
+  padding: 40px 0;
+}
+
+.project-details .container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.project-details h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.project-details-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.project-description,
+.project-technologies {
+  margin-bottom: 30px;
+}
+
+.project-description h3,
+.project-technologies h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.project-description p {
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.project-technologies ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+.project-technologies li {
+  background-color: #f0f0f0;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.project-link {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.view-live-btn {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.view-live-btn:hover {
+  background-color: #0056b3;
+}
+
+.back-btn {
+  display: block;
+  margin-top: 40px;
+  text-align: center;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #d9534f;
+}

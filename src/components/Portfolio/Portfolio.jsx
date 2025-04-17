@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./Portfolio.css";
-import breadCrumbs from "../../assets/images/BREADCRUMBS.jpg";
-import valentines from "../../assets/images/valentines.jpg";
-import solarSystem from "../../assets/images/solarsystem.jpg";
 
 const Portfolio = () => {
   const [projects, setProjects] = useState([]);
@@ -17,6 +15,7 @@ const Portfolio = () => {
           "https://portfolio-react-c64m.onrender.com/api/projects"
         );
         const data = await response.json();
+        console.log("Fetched projects:", data);
         setProjects(data);
         setError(null);
       } catch (error) {
@@ -40,16 +39,20 @@ const Portfolio = () => {
         {projects.map((project, index) => (
           <div key={project._id || index} className="portfolio-block">
             <img
-              src={project.image}
+              src={
+                project.imageUrl ||
+                project.image ||
+                "https://via.placeholder.com/300x200"
+              }
               alt={project.title}
               className="portfolio-image"
             />
             <div className="portfolio-text">
               <h3>{project.title}</h3>
               <p>{project.description}</p>
-              <a className="project-button" href={project.link}>
+              <Link to={`/project/${project._id}`} className="project-button">
                 <span className="arrow">→</span>
-              </a>
+              </Link>
             </div>
           </div>
         ))}
