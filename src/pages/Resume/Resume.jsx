@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Resume.css";
-import { use } from "react";
 
 const Resume = () => {
   const [experience, setExperience] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [expandedExperience, setExpandedExperience] = useState({});
+
   useEffect(() => {
     const fetchExperience = async () => {
       try {
@@ -24,8 +26,54 @@ const Resume = () => {
         setLoading(false);
       }
     };
+
+    const fetchProjects = async () => {
+      try {
+        const urls = [
+          "http://localhost:5000/api/projects",
+          "https://portfolio-react-c64m.onrender.com/api/projects",
+        ];
+
+        let fetchSuccess = false;
+
+        for (const url of urls) {
+          try {
+            console.log(`Attempting to fetch projects from: ${url}`);
+            const response = await fetch(url, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+              },
+              signal: AbortSignal.timeout(5000),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              console.log("Fetched projects:", data);
+              setProjects(data);
+              fetchSuccess = true;
+              break;
+            }
+          } catch (err) {
+            console.log(`Error with ${url}:`, err.message);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
     fetchExperience();
+    fetchProjects();
   }, []);
+
+  const toggleExperience = (id) => {
+    setExpandedExperience((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   if (loading) return <div className="loading">Loading experience...</div>;
   if (error) return <div className="error">{error}</div>;
   const featuredExperience = experience.filter(
@@ -38,25 +86,40 @@ const Resume = () => {
         <div className="resume-block experience">
           <h3>Experience</h3>
           {featuredExperience.length > 0 ? (
-            featuredExperience.map((experience, index) => (
-              <div key={experience._id || index} className="experience-block">
-                <h4>{experience.position}</h4>
-                <p className="company">{experience.company}</p>
-                {experience.startDate && (
-                  <p className="date">
-                    {experience.startDate} - {experience.endDate || "Present"}
-                  </p>
-                )}
-                {experience.description && (
-                  <p className="description">{experience.description}</p>
-                )}
-                {experience.technologies &&
-                  experience.technologies.length > 0 && (
-                    <div className="technologies">
-                      <span>Skills: </span>
-                      {experience.technologies.join(", ")}
-                    </div>
+            featuredExperience.map((exp, index) => (
+              <div key={exp._id || index} className="experience-block">
+                <div
+                  className="experience-header"
+                  onClick={() => toggleExperience(exp._id || index)}
+                >
+                  <h4>{exp.position}</h4>
+                  <p className="company">{exp.company}</p>
+                  {exp.startDate && (
+                    <p className="date">
+                      {exp.startDate} - {exp.endDate || "Present"}
+                    </p>
                   )}
+                  {exp.description && (
+                    <p className="description">{exp.description}</p>
+                  )}
+                  <span className="accordion-indicator">
+                    {expandedExperience[exp._id || index] ? "▼" : "▶"}
+                  </span>
+                </div>
+
+                {expandedExperience[exp._id || index] && (
+                  <div className="experience-details">
+                    <h4>Projects</h4>
+                    <div className="projects-list">
+                      {exp.projects.map((project, projIndex) => (
+                        <div key={projIndex} className="project-item">
+                          <h5>{project.title}</h5>
+                          <p>{project.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))
           ) : (
@@ -99,20 +162,6 @@ const Resume = () => {
               Database Management
             </li>
           </ul>
-        </div>
-      </div>
-
-      <div className="resume-block certifications">
-        <h3>Certifications</h3>
-        <div className="entry">
-          <h4>Web Development Bootcamp</h4>
-          <p className="institution">Udemy</p>
-          <p className="date">2023</p>
-        </div>
-        <div className="entry">
-          <h4>UI/UX Design Fundamentals</h4>
-          <p className="institution">Coursera</p>
-          <p className="date">2022</p>
         </div>
       </div>
     </section>

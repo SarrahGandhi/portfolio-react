@@ -1,5 +1,5 @@
 .resume-section {
-  padding: 80px 0;
+  padding: 20px 0;
   margin: 40px 83px;
   background: #fff;
 
@@ -15,9 +15,7 @@
 }
 
 .resume-container {
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 40px;
 }
 
 .resume-block {
@@ -31,8 +29,11 @@
 .resume-block:hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.25);
-  background: #ffea00;
   transition: all 0.3s ease;
+}
+.education:hover,
+.skills:hover {
+  background-color: yellow;
 }
 
 .resume-block h3 {
@@ -41,7 +42,15 @@
   font-family: "Space Grotesk", sans-serif;
   color: #000;
 }
-
+.project-item {
+  padding-left: 40px;
+}
+.project-item p {
+  padding: 20px 0;
+}
+.projects-list {
+  margin-top: 20px;
+}
 .entry {
   margin-bottom: 30px;
 }
@@ -109,7 +118,7 @@
 
 @media screen and (max-width: 768px) {
   .resume-section {
-    margin: 40px 20px;
+    margin: 20px 20px;
     padding: 40px 0;
   }
 
@@ -212,4 +221,56 @@
 .create-sample-button:disabled {
   background-color: #a4c2f4;
   cursor: not-allowed;
+}
+
+.experience-block {
+  margin-bottom: 15px;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.experience-header {
+  padding: 15px 20px;
+  background-color: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.experience-header:hover {
+  background-color: #ffbb00;
+}
+
+.experience-header h4 {
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.accordion-indicator {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #555;
+  transition: transform 0.3s ease;
+}
+
+.experience-details {
+  padding: 0 20px 20px 20px;
+  background-color: #fff;
+  border-top: 1px solid #eaeaea;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

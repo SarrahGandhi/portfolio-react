@@ -52,12 +52,15 @@ const projectSchema = new mongoose.Schema({
   link: String,
 });
 const WorkSchema = new mongoose.Schema({
-  _id: String,
   company: String,
-  role: String,
+  position: String,
+  startDate: String,
+  endDate: String,
+  description: String,
+  featured: Boolean,
 });
 const Project = mongoose.model("Projects", projectSchema);
-const Experience = mongoose.model("experience", WorkSchema);
+const Experience = mongoose.model("Experience", WorkSchema);
 // Admin Schema
 const adminSchema = new mongoose.Schema({
   username: {
