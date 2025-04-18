@@ -8,7 +8,6 @@ const db = require("./db");
 const mongoose = require("mongoose");
 
 // Import routes
-const experienceRoutes = require("./routes/experienceRoutes");
 
 const app = express();
 const port = process.env.PORT || 5000;
