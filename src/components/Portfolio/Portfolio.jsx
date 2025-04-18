@@ -49,7 +49,7 @@ const Portfolio = () => {
             />
             <div className="portfolio-text">
               <h3>{project.title}</h3>
-              <p>{project.description}</p>
+              <p>{project.short_description}</p>
               <Link to={`/project/${project._id}`} className="project-button">
                 <span className="arrow">→</span>
               </Link>

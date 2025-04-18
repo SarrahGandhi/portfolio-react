@@ -140,7 +140,7 @@ const ProjectDetails = () => {
 
   return (
     <section className="project-details">
-      <div className="container">
+      <div className="project-container">
         <h2>{project?.title}</h2>
 
         {project?.image && (
@@ -150,57 +150,65 @@ const ProjectDetails = () => {
             className="project-details-image"
           />
         )}
+        <div className="project-btn">
+          {project?.link && (
+            <div className="project-link">
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="view-live-btn"
+              >
+                View Live Project
+              </a>
+            </div>
+          )}
+
+          {project?.githubUrl && (
+            <div className="github-link">
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="view-github-btn"
+              >
+                View on GitHub
+              </a>
+            </div>
+          )}
+        </div>
+        <h3>Technologies Used</h3>
+        {project?.technologies && (
+          <div className="project-languages">
+            <div className="project-languages-scroll">
+              <ul>
+                {project.technologies.map((tech, index) => (
+                  <li key={index}>
+                    <p>{tech}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
 
         <div className="project-description">
           <h3>Description</h3>
           <p>{project?.description}</p>
         </div>
-
-        {project?.technologies && (
-          <div className="project-technologies">
-            <h3>Technologies Used</h3>
+        <div className="project-description">
+          {project.keyfeatures && project.keyfeatures.length > 0 && (
             <ul>
-              {project.technologies.map((tech, index) => (
-                <li key={index}>{tech}</li>
+              <h3>Key Features</h3>
+              {project.keyfeatures.map((feature, index) => (
+                <li key={index}>{feature}</li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {project?.link && (
-          <div className="project-link">
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="view-live-btn"
-            >
-              View Live Project
-            </a>
-          </div>
-        )}
-
-        {project?.githubUrl && (
-          <div className="project-link" style={{ marginTop: "15px" }}>
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="github-btn"
-              style={{
-                background: "#24292e",
-                color: "white",
-                padding: "10px 20px",
-                borderRadius: "5px",
-                textDecoration: "none",
-                display: "inline-block",
-              }}
-            >
-              View on GitHub
-            </a>
-          </div>
-        )}
-
+          )}
+        </div>
+        <div className="project-description">
+          {project?.extra && <p>{project.extra}</p>}
+        </div>
         <Link to="/" className="back-btn">
           Back to Portfolio
         </Link>

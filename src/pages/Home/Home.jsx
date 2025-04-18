@@ -29,7 +29,7 @@ const Home = () => {
           <h1>Developer by profession</h1>
           <h1>Debugger by chance</h1>
           <button>
-            <a href="#portfolio">See Portfolio</a>
+            <a href="#portfolio">Download Resume</a>
           </button>
         </div>
         <aside className="photo">

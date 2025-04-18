@@ -31,6 +31,7 @@ const projectSchema = new mongoose.Schema({
   description: String,
   imageUrl: String,
   technologies: [String],
+  keyFeatures: [String],
   githubUrl: String,
   projectUrl: String,
   featured: Boolean,

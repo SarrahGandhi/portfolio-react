@@ -2,8 +2,9 @@
   padding: 40px 0;
 }
 
-.project-details .container {
-  max-width: 1000px;
+.project-details .project-container {
+  display: flex;
+  flex-direction: column;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -13,7 +14,10 @@
   margin-bottom: 20px;
   text-align: center;
 }
-
+.project-details h3 {
+  font-size: 1.5rem;
+  text-align: center;
+}
 .project-details-image {
   width: 100%;
   height: auto;
@@ -53,26 +57,6 @@
   font-size: 0.9rem;
 }
 
-.project-link {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.view-live-btn {
-  display: inline-block;
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.view-live-btn:hover {
-  background-color: #0056b3;
-}
-
 .back-btn {
   display: block;
   margin-top: 40px;
@@ -86,6 +70,122 @@
   text-decoration: underline;
 }
 
+/* Updated languages styling without animation */
+.project-languages {
+  margin: 10px 0 30px 0;
+  width: 100%;
+  padding: 20px 0;
+  position: relative;
+  background: #000;
+  justify-content: center;
+  text-align: center;
+}
+
+.project-languages-scroll {
+  width: 100%;
+  position: relative;
+  animation: none;
+  justify-content: center;
+  display: FLEX;
+  flex-direction: row;
+  text-align: center;
+}
+
+.project-languages-scroll ul {
+  display: flex;
+  padding: 0;
+  list-style: none;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+}
+
+.project-languages-scroll li {
+  margin-right: 0;
+  flex-shrink: 0;
+  opacity: 0.9;
+
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.project-languages-scroll li:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.project-languages-scroll p {
+  margin: 0;
+  color: white;
+  font-size: 28px;
+
+  padding: 5px 15px;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.project-btn {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 20px;
+  margin: 20px 0;
+}
+.project-link {
+  border-radius: 28px;
+  border: 5px solid #000;
+  background: #bae6ff;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+}
+.github-link {
+  border-radius: 28px;
+  border: 5px solid #000;
+  background: #000000;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+}
+.project-link:hover {
+  background-color: yellow;
+}
+.view-live-btn {
+  color: #000;
+  text-align: center;
+  font-family: "Space Grotesk";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  padding: 0 20px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+.view-github-btn {
+  color: #ffffff;
+  text-align: center;
+  font-family: "Space Grotesk";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  padding: 0 20px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+.github-link:hover {
+  background-color: rgb(207, 162, 0);
+}
 .loading,
 .error {
   text-align: center;
@@ -95,4 +195,32 @@
 
 .error {
   color: #d9534f;
+}
+
+.github-link {
+  background: #24292e;
+  border-color: #24292e;
+  color: white;
+}
+
+.github-link .view-live-btn {
+  color: white;
+}
+
+.project-description ul {
+  list-style-position: inside;
+  padding-left: 1rem;
+  margin-top: 1rem;
+}
+
+.project-description li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+/* Fix for list items inside paragraph */
+.project-description p li {
+  display: list-item;
+  margin-left: 1rem;
+  margin-bottom: 0.75rem;
 }
