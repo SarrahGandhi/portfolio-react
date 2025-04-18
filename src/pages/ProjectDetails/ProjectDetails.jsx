@@ -50,7 +50,6 @@ const ProjectDetails = () => {
         // Process the data to ensure it has expected properties
         const processedProject = {
           ...foundProject,
-          image: foundProject.imageUrl || foundProject.image,
           link:
             foundProject.projectUrl ||
             foundProject.link ||
@@ -105,7 +104,6 @@ const ProjectDetails = () => {
           // Process the data to ensure it has expected properties
           const processedProject = {
             ...data,
-            image: data.imageUrl || data.image,
             link: data.projectUrl || data.link || data.githubUrl,
           };
 
@@ -138,80 +136,90 @@ const ProjectDetails = () => {
     );
   }
 
+  // Helper function to check if a URL exists and is not empty
+  const hasValidUrl = (url) => url && url.trim() !== "";
+
   return (
     <section className="project-details">
       <div className="project-container">
-        <h2>{project?.title}</h2>
+        {project && project.featured === true ? (
+          <>
+            <h2>{project?.title}</h2>
 
-        {project?.image && (
-          <img
-            src={project.image}
-            alt={project.title}
-            className="project-details-image"
-          />
-        )}
-        <div className="project-btn">
-          {project?.link && (
-            <div className="project-link">
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="view-live-btn"
-              >
-                View Live Project
-              </a>
-            </div>
-          )}
+            <div className="project-btn">
+              {hasValidUrl(project.projectUrl) && (
+                <div className="project-link">
+                  <a
+                    href={project.projectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="view-live-btn"
+                  >
+                    View Live Project
+                  </a>
+                </div>
+              )}
 
-          {project?.githubUrl && (
-            <div className="github-link">
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="view-github-btn"
-              >
-                View on GitHub
-              </a>
+              {hasValidUrl(project.githubUrl) && (
+                <div className="github-link">
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="view-github-btn"
+                  >
+                    View on GitHub
+                  </a>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <h3>Technologies Used</h3>
-        {project?.technologies && (
-          <div className="project-languages">
-            <div className="project-languages-scroll">
-              <ul>
-                {project.technologies.map((tech, index) => (
-                  <li key={index}>
-                    <p>{tech}</p>
-                  </li>
-                ))}
-              </ul>
+            <h3>Technologies Used</h3>
+            {project?.technologies && (
+              <div className="project-languages">
+                <div className="project-languages-scroll">
+                  <ul>
+                    {project.technologies.map((tech, index) => (
+                      <li key={index}>
+                        <p>{tech}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            <div className="project-description">
+              <h3>Description</h3>
+              <p>{project?.description}</p>
+            </div>
+
+            {project?.keyFeatures && project.keyFeatures.length > 0 && (
+              <div className="key-features">
+                <h3>Key Features</h3>
+                <ul>
+                  {project.keyFeatures.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="back-to-portfolio">
+              <Link to="/" className="back-to-home">
+                Back to Portfolio
+              </Link>
+            </div>
+          </>
+        ) : (
+          <div className="project-error">
+            <h2>Project Details Not Available</h2>
+            <div className="back-to-portfolio">
+              <Link to="/" className="back-to-home">
+                Back to Portfolio
+              </Link>
             </div>
           </div>
         )}
-
-        <div className="project-description">
-          <h3>Description</h3>
-          <p>{project?.description}</p>
-        </div>
-        <div className="project-description">
-          {project.keyfeatures && project.keyfeatures.length > 0 && (
-            <ul>
-              <h3>Key Features</h3>
-              {project.keyfeatures.map((feature, index) => (
-                <li key={index}>{feature}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <div className="project-description">
-          {project?.extra && <p>{project.extra}</p>}
-        </div>
-        <Link to="/" className="back-btn">
-          Back to Portfolio
-        </Link>
       </div>
     </section>
   );

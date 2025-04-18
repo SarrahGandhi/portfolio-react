@@ -217,7 +217,26 @@
   margin-bottom: 0.5rem;
   line-height: 1.5;
 }
-
+.back-to-portfolio {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 40px 0;
+}
+.back-to-home {
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.back-to-home:hover {
+  transform: translateY(-2px);
+  text-decoration: underline;
+}
 /* Fix for list items inside paragraph */
 .project-description p li {
   display: list-item;

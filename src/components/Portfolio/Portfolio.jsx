@@ -32,25 +32,23 @@ const Portfolio = () => {
   if (loading) return <div className="loading">Loading projects...</div>;
   if (error) return <div className="error">{error}</div>;
 
+  // Filter to only show featured projects
+  const featuredProjects = projects.filter(
+    (project) => project && project.featured === true
+  );
+
   return (
     <section id="portfolio">
       <h2>My Portfolio</h2>
       <div className="container">
-        {projects.map((project, index) => (
-          <div key={project._id || index} className="portfolio-block">
-            <img
-              src={
-                project.imageUrl ||
-                project.image ||
-                "https://via.placeholder.com/300x200"
-              }
-              alt={project.title}
-              className="portfolio-image"
-            />
+        {featuredProjects.map((project, index) => (
+          <div key={project?._id || index} className="portfolio-block">
+            <div className="portfolio-project-title">
+              <h3>{project?.title}</h3>
+            </div>
             <div className="portfolio-text">
-              <h3>{project.title}</h3>
-              <p>{project.short_description}</p>
-              <Link to={`/project/${project._id}`} className="project-button">
+              <p>{project?.short_description}</p>
+              <Link to={`/project/${project?._id}`} className="project-button">
                 <span className="arrow">→</span>
               </Link>
             </div>

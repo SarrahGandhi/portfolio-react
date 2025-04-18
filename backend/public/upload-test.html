@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1 {
+        color: #333;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #result {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        display: none;
+      }
+      .preview-image {
+        max-width: 300px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Image Upload Test</h1>
+
+    <div class="form-group">
+      <label for="imageInput">Select an image:</label>
+      <input type="file" id="imageInput" accept="image/*" />
+    </div>
+
+    <div class="form-group">
+      <button id="uploadButton">Upload Image</button>
+    </div>
+
+    <div id="result">
+      <h3>Upload Result</h3>
+      <pre id="resultJson"></pre>
+      <div id="localImageContainer">
+        <h4>Local Image</h4>
+        <img id="localImage" class="preview-image" />
+      </div>
+      <div id="cloudinaryImageContainer">
+        <h4>Cloudinary Image</h4>
+        <img id="cloudinaryImage" class="preview-image" />
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("uploadButton")
+        .addEventListener("click", async () => {
+          const fileInput = document.getElementById("imageInput");
+          const resultDiv = document.getElementById("result");
+          const resultJson = document.getElementById("resultJson");
+          const localImage = document.getElementById("localImage");
+          const cloudinaryImage = document.getElementById("cloudinaryImage");
+          const localContainer = document.getElementById("localImageContainer");
+          const cloudinaryContainer = document.getElementById(
+            "cloudinaryImageContainer"
+          );
+
+          if (!fileInput.files[0]) {
+            alert("Please select an image first");
+            return;
+          }
+
+          // Create form data
+          const formData = new FormData();
+          formData.append("image", fileInput.files[0]);
+
+          try {
+            // Upload to debug endpoint
+            const response = await fetch(
+              "http://localhost:7000/api/upload-debug",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            const data = await response.json();
+
+            // Display result
+            resultJson.textContent = JSON.stringify(data, null, 2);
+            resultDiv.style.display = "block";
+
+            // Show images if available
+            if (data.localUrl) {
+              localImage.src = data.localUrl;
+              localContainer.style.display = "block";
+            } else {
+              localContainer.style.display = "none";
+            }
+
+            if (data.cloudinaryUrl) {
+              cloudinaryImage.src = data.cloudinaryUrl;
+              cloudinaryContainer.style.display = "block";
+            } else {
+              cloudinaryContainer.style.display = "none";
+            }
+          } catch (error) {
+            console.error("Upload error:", error);
+            resultJson.textContent = JSON.stringify(
+              { error: error.message },
+              null,
+              2
+            );
+            resultDiv.style.display = "block";
+            localContainer.style.display = "none";
+            cloudinaryContainer.style.display = "none";
+          }
+        });
+    </script>
+  </body>
+</html>
