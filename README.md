@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# Portfolio Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A personal portfolio website built with React and Node.js to showcase projects, work experience, and skills.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Responsive Design**: Mobile-friendly interface that works on all devices
+- **Portfolio Showcase**: Display projects with details, technologies, and links
+- **Resume/Experience Section**: Highlight professional experience and skills
+- **Admin Dashboard**: Secure admin panel to manage projects and work experience
+- **Contact Form**: Allow visitors to reach out via a contact form
+- **Authentication**: Secure login for admin functionality
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Frontend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React
+- React Router
+- CSS3
+- JavaScript (ES6+)
 
-### `npm test`
+### Backend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js
+- Express.js
+- MongoDB (with Mongoose)
+- Express Session for authentication
 
-### `npm run build`
+### DevOps
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Concurrently (for running frontend and backend simultaneously)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Project Structure
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+portfolio-react/
+├── public/                 # Static files
+├── src/                    # React frontend
+│   ├── assets/             # Images and static assets
+│   ├── components/         # Reusable UI components
+│   ├── config/             # Configuration files
+│   ├── pages/              # Page components
+│   │   ├── Admin/          # Admin dashboard and forms
+│   │   ├── Home/           # Homepage components
+│   │   ├── ProjectDetails/ # Project detail page
+│   │   └── Resume/         # Resume page
+│   ├── App.jsx             # Main application component
+│   └── index.js            # Application entry point
+├── backend/                # Node.js backend
+│   ├── public/             # Static files for backend
+│   ├── src/                # Backend source code
+│   ├── db.js               # Database connection
+│   ├── server.js           # Express server setup
+│   └── .env                # Environment variables
+```
 
-### `npm run eject`
+## Getting Started
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Prerequisites
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Node.js
+- npm or yarn
+- MongoDB
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Installation
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Clone the repository
 
-## Learn More
+   ```
+   git clone <repository-url>
+   cd portfolio-react
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. Install frontend dependencies
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   ```
+   npm install
+   ```
 
-### Code Splitting
+3. Install backend dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   ```
+   cd backend
+   npm install
+   ```
 
-### Analyzing the Bundle Size
+4. Create a `.env` file in the backend directory with the following variables:
+   ```
+   PORT=5001
+   MONGODB_URI=your_mongodb_connection_string
+   SESSIONSECRET=your_session_secret
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Running the application
 
-### Making a Progressive Web App
+#### Development mode
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+npm run dev
+```
 
-### Advanced Configuration
+This runs both frontend and backend concurrently:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5001
 
-### Deployment
+#### Frontend only
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+npm start
+```
 
-### `npm run build` fails to minify
+#### Backend only
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+cd backend
+npm run dev
+```
+
+## Deployment
+
+- Frontend can be deployed to services like Netlify, Vercel, or GitHub Pages
+- Backend can be deployed to services like Render, Heroku, or DigitalOcean
+
+## License
+
+This project is licensed under the MIT License
