@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ENDPOINTS, FETCH_OPTIONS, apiRequest } from "../../config/api";
+import { ENDPOINTS, FETCH_OPTIONS } from "../../config/api";
 import "./Admin.css";
 
 const ExperienceForm = () => {
@@ -15,8 +15,10 @@ const ExperienceForm = () => {
     endDate: "",
     description: "",
     featured: false,
+    projects: [],
   });
 
+  const [newProject, setNewProject] = useState("");
   const [loading, setLoading] = useState(isEditMode);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -56,6 +58,7 @@ const ExperienceForm = () => {
             endDate: experienceData.endDate || "",
             description: experienceData.description || "",
             featured: experienceData.featured || false,
+            projects: experienceData.projects || [],
           });
         }
       } catch (error) {
@@ -74,6 +77,25 @@ const ExperienceForm = () => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleAddProject = () => {
+    if (newProject.trim()) {
+      setFormData((prevData) => ({
+        ...prevData,
+        projects: [...prevData.projects, newProject.trim()],
+      }));
+      setNewProject("");
+    }
+  };
+
+  const handleRemoveProject = (projectToRemove) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      projects: prevData.projects.filter(
+        (project) => project !== projectToRemove
+      ),
     }));
   };
 
@@ -179,6 +201,41 @@ const ExperienceForm = () => {
             onChange={handleChange}
             required
           />
+        </div>
+        <div className="admin-form-row">
+          <label>Projects</label>
+          <div className="admin-tag-input">
+            {Array.isArray(formData.projects) &&
+              formData.projects.map((project, index) => (
+                <div key={index} className="admin-tag">
+                  {typeof project === "object" && project !== null
+                    ? project.title || "Untitled Project"
+                    : String(project)}
+                  <button
+                    type="button"
+                    className="admin-tag-remove"
+                    onClick={() => handleRemoveProject(project)}
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+          </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <input
+              type="text"
+              value={newProject}
+              onChange={(e) => setNewProject(e.target.value)}
+              placeholder="Add a project"
+            />
+            <button
+              type="button"
+              className="admin-action-btn"
+              onClick={handleAddProject}
+            >
+              Add
+            </button>
+          </div>
         </div>
 
         <div className="admin-form-row">

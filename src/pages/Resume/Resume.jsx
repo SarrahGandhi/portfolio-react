@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ENDPOINTS, FETCH_OPTIONS, apiRequest } from "../../config/api";
+import { ENDPOINTS } from "../../config/api";
 import "./Resume.css";
 
 const Resume = () => {
@@ -145,14 +145,50 @@ const Resume = () => {
                     <h4>Projects</h4>
                     <div className="projects-list">
                       {exp.projects &&
+                      Array.isArray(exp.projects) &&
+                      exp.projects.length > 0 ? (
                         exp.projects.map((project, projIndex) => (
                           <div key={projIndex} className="project-item">
-                            <h5>{project.title}</h5>
-                            <p>{project.description}</p>
+                            {typeof project === "object" && project !== null ? (
+                              <>
+                                <h5>{project.title || "Untitled Project"}</h5>
+                                <p>
+                                  {project.description ||
+                                    "No description available"}
+                                </p>
+                              </>
+                            ) : (
+                              <p>{String(project)}</p>
+                            )}
                           </div>
-                        ))}
-                      {!exp.projects && (
-                        <p>No projects associated with this experience.</p>
+                        ))
+                      ) : (
+                        <>
+                          {projects.filter(
+                            (p) =>
+                              p.title &&
+                              p.title
+                                .toLowerCase()
+                                .includes(exp.company.toLowerCase())
+                          ).length > 0 ? (
+                            projects
+                              .filter(
+                                (p) =>
+                                  p.title &&
+                                  p.title
+                                    .toLowerCase()
+                                    .includes(exp.company.toLowerCase())
+                              )
+                              .map((relatedProject, idx) => (
+                                <div key={idx} className="project-item">
+                                  <h5>{relatedProject.title}</h5>
+                                  <p>{relatedProject.description}</p>
+                                </div>
+                              ))
+                          ) : (
+                            <p>No projects associated with this experience.</p>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
