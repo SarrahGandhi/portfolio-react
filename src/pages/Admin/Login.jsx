@@ -17,6 +17,9 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Get the page they were trying to visit before being redirected to login
+  const from = location.state?.from?.pathname || "/admin/dashboard";
+
   useEffect(() => {
     // Check for logout parameter
     const params = new URLSearchParams(location.search);
@@ -55,7 +58,7 @@ const Login = () => {
         // Only redirect if we have confirmation of authentication
         if (data && data.isAuthenticated === true) {
           console.log("User already authenticated, redirecting to dashboard");
-          navigate("/admin/dashboard");
+          navigate(from);
         }
       } catch (error) {
         console.error("Auth check error:", error);
@@ -66,7 +69,7 @@ const Login = () => {
     if (!justLoggedOut) {
       checkAuthStatus();
     }
-  }, [navigate, location.search, justLoggedOut]);
+  }, [navigate, location.search, justLoggedOut, from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,7 +95,7 @@ const Login = () => {
       if (response.ok) {
         // Successfully logged in
         console.log("Login successful, redirecting to dashboard");
-        navigate("/admin/dashboard");
+        navigate(from);
       } else {
         // Login failed
         setError(data.error || "Invalid login credentials");

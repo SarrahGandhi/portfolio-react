@@ -13,6 +13,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 import ProjectForm from "./pages/Admin/ProjectForm";
 import ExperienceForm from "./pages/Admin/ExperienceForm";
 import Register from "./pages/Admin/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 
 // Create a HomePage component that combines all sections except Resume
@@ -89,7 +90,9 @@ function App() {
             path="/admin/dashboard"
             element={
               <AdminLayout>
-                <Dashboard />
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
               </AdminLayout>
             }
           />
@@ -97,7 +100,9 @@ function App() {
             path="/admin/projects/new"
             element={
               <AdminLayout>
-                <ProjectForm />
+                <ProtectedRoute>
+                  <ProjectForm />
+                </ProtectedRoute>
               </AdminLayout>
             }
           />
@@ -105,7 +110,9 @@ function App() {
             path="/admin/projects/edit/:id"
             element={
               <AdminLayout>
-                <ProjectForm />
+                <ProtectedRoute>
+                  <ProjectForm />
+                </ProtectedRoute>
               </AdminLayout>
             }
           />
@@ -113,7 +120,9 @@ function App() {
             path="/admin/experience/new"
             element={
               <AdminLayout>
-                <ExperienceForm />
+                <ProtectedRoute>
+                  <ExperienceForm />
+                </ProtectedRoute>
               </AdminLayout>
             }
           />
@@ -121,7 +130,9 @@ function App() {
             path="/admin/experience/edit/:id"
             element={
               <AdminLayout>
-                <ExperienceForm />
+                <ProtectedRoute>
+                  <ExperienceForm />
+                </ProtectedRoute>
               </AdminLayout>
             }
           />
@@ -129,7 +140,9 @@ function App() {
             path="/admin/register"
             element={
               <AdminLayout>
-                <Register />
+                <ProtectedRoute>
+                  <Register />
+                </ProtectedRoute>
               </AdminLayout>
             }
           />
