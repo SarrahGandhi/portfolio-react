@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ENDPOINTS, FETCH_OPTIONS, apiRequest } from "../../config/api";
 import "./Resume.css";
 
 const Resume = () => {
@@ -12,16 +13,45 @@ const Resume = () => {
     const fetchExperience = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          "https://portfolio-react-c64m.onrender.com/api/experience"
-        );
-        const data = await response.json();
-        console.log("Fetched experience:", data);
-        setExperience(data);
-        setError(null);
+        // Try different API endpoints - useful for development and production
+        const urls = [
+          ENDPOINTS.experiences,
+          "https://portfolio-react-c64m.onrender.com/api/experience",
+        ];
+
+        let fetchSuccess = false;
+
+        for (const url of urls) {
+          try {
+            console.log(`Attempting to fetch experiences from: ${url}`);
+            const response = await fetch(url, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+              },
+              signal: AbortSignal.timeout(5000),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              console.log("Fetched experiences:", data);
+              setExperience(data);
+              fetchSuccess = true;
+              break;
+            }
+          } catch (err) {
+            console.log(`Error with ${url}:`, err.message);
+          }
+        }
+
+        if (!fetchSuccess) {
+          setError("Failed to load experiences");
+        } else {
+          setError(null);
+        }
       } catch (error) {
-        console.error("Error fetching experience:", error);
-        setError("Failed to load experience");
+        console.error("Error fetching experiences:", error);
+        setError("Failed to load experiences");
       } finally {
         setLoading(false);
       }
@@ -30,7 +60,7 @@ const Resume = () => {
     const fetchProjects = async () => {
       try {
         const urls = [
-          "http://localhost:5000/api/projects",
+          ENDPOINTS.projects,
           "https://portfolio-react-c64m.onrender.com/api/projects",
         ];
 
@@ -76,17 +106,20 @@ const Resume = () => {
 
   if (loading) return <div className="loading">Loading experience...</div>;
   if (error) return <div className="error">{error}</div>;
-  const featuredExperience = experience.filter(
-    (experience) => experience.featured === true
-  );
+
+  // Filter to featured experiences if available
+  const featuredExperiences = experience.filter((exp) => exp.featured === true);
+  const experiencesToDisplay =
+    featuredExperiences.length > 0 ? featuredExperiences : experience;
+
   return (
     <section id="resume" className="resume-section">
       <h2>Resume</h2>
       <div className="resume-container">
         <div className="resume-block experience">
           <h3>Experience</h3>
-          {featuredExperience.length > 0 ? (
-            featuredExperience.map((exp, index) => (
+          {experiencesToDisplay.length > 0 ? (
+            experiencesToDisplay.map((exp, index) => (
               <div key={exp._id || index} className="experience-block">
                 <div
                   className="experience-header"
@@ -111,12 +144,16 @@ const Resume = () => {
                   <div className="experience-details">
                     <h4>Projects</h4>
                     <div className="projects-list">
-                      {exp.projects.map((project, projIndex) => (
-                        <div key={projIndex} className="project-item">
-                          <h5>{project.title}</h5>
-                          <p>{project.description}</p>
-                        </div>
-                      ))}
+                      {exp.projects &&
+                        exp.projects.map((project, projIndex) => (
+                          <div key={projIndex} className="project-item">
+                            <h5>{project.title}</h5>
+                            <p>{project.description}</p>
+                          </div>
+                        ))}
+                      {!exp.projects && (
+                        <p>No projects associated with this experience.</p>
+                      )}
                     </div>
                   </div>
                 )}

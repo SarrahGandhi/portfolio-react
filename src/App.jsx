@@ -11,6 +11,7 @@ import Footer from "./components/Footer/Footer";
 import Login from "./pages/Admin/Login";
 import Dashboard from "./pages/Admin/Dashboard";
 import ProjectForm from "./pages/Admin/ProjectForm";
+import ExperienceForm from "./pages/Admin/ExperienceForm";
 import Register from "./pages/Admin/Register";
 import "./App.css";
 
@@ -105,6 +106,22 @@ function App() {
             element={
               <AdminLayout>
                 <ProjectForm />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/experience/new"
+            element={
+              <AdminLayout>
+                <ExperienceForm />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/experience/edit/:id"
+            element={
+              <AdminLayout>
+                <ExperienceForm />
               </AdminLayout>
             }
           />

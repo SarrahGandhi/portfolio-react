@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ENDPOINTS, FETCH_OPTIONS, apiRequest } from "../../config/api";
 import "./Admin.css";
 
 // NOTE: This component should be removed or secured after initial admin setup
@@ -18,11 +19,9 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/admin/register", {
+      const response = await fetch(ENDPOINTS.register, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        ...FETCH_OPTIONS,
         body: JSON.stringify({ username, password }),
       });
 

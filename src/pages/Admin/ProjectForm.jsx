@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ENDPOINTS, FETCH_OPTIONS, apiRequest } from "../../config/api";
 import "./Admin.css";
 
 const ProjectForm = () => {
@@ -29,13 +30,10 @@ const ProjectForm = () => {
     const checkAuthAndFetchProject = async () => {
       try {
         // Check if user is authenticated
-        const authResponse = await fetch(
-          "http://localhost:8000/api/admin/check-auth",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const authResponse = await fetch(ENDPOINTS.checkAuth, {
+          method: "GET",
+          ...FETCH_OPTIONS,
+        });
 
         const authData = await authResponse.json();
 
@@ -46,12 +44,9 @@ const ProjectForm = () => {
 
         // If in edit mode, fetch the project
         if (isEditMode) {
-          const projectResponse = await fetch(
-            `http://localhost:8000/api/projects/${id}`,
-            {
-              credentials: "include",
-            }
-          );
+          const projectResponse = await fetch(ENDPOINTS.project(id), {
+            ...FETCH_OPTIONS,
+          });
 
           if (!projectResponse.ok) {
             throw new Error("Failed to fetch project");
@@ -135,18 +130,15 @@ const ProjectForm = () => {
 
     try {
       const url = isEditMode
-        ? `http://localhost:8000/api/admin/projects/${id}`
-        : "http://localhost:8000/api/admin/projects";
+        ? ENDPOINTS.adminProject(id)
+        : ENDPOINTS.adminProjects;
 
       const method = isEditMode ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        ...FETCH_OPTIONS,
         body: JSON.stringify(formData),
-        credentials: "include",
       });
 
       if (!response.ok) {

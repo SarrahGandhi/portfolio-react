@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { ENDPOINTS, FETCH_OPTIONS, apiRequest } from "../../config/api";
 import "./ProjectDetails.css";
 
 const ProjectDetails = () => {
@@ -13,17 +14,36 @@ const ProjectDetails = () => {
   useEffect(() => {
     const fetchAllProjects = async () => {
       try {
-        const response = await fetch(
-          "https://portfolio-react-c64m.onrender.com/api/projects"
-        );
+        // Try both local and remote endpoints
+        const urls = [
+          ENDPOINTS.projects,
+          "https://portfolio-react-c64m.onrender.com/api/projects",
+        ];
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch projects");
+        let fetchSuccess = false;
+
+        for (const url of urls) {
+          try {
+            console.log(`Attempting to fetch projects from: ${url}`);
+            const response = await fetch(url, {
+              signal: AbortSignal.timeout(5000),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              console.log("All available projects:", data);
+              setAllProjects(data);
+              fetchSuccess = true;
+              break;
+            }
+          } catch (err) {
+            console.log(`Error with ${url}:`, err.message);
+          }
         }
 
-        const data = await response.json();
-        console.log("All available projects:", data);
-        setAllProjects(data);
+        if (!fetchSuccess) {
+          throw new Error("Failed to fetch projects");
+        }
       } catch (error) {
         console.error("Error fetching all projects:", error);
       }
@@ -76,7 +96,7 @@ const ProjectDetails = () => {
 
           // Try local API first, then remote
           const urls = [
-            `http://localhost:3000/api/projects/${id}`,
+            ENDPOINTS.project(id),
             `https://portfolio-react-c64m.onrender.com/api/projects/${id}`,
           ];
 

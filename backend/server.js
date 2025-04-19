@@ -10,17 +10,50 @@ const mongoose = require("mongoose");
 // Import routes
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
-// Set up CORS to allow requests from your Vercel frontend
+// Set up CORS to allow requests from your frontend domains
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5000",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:5000",
+  "https://www.sarrahgandhi.com",
+  "https://sarrahgandhi.com",
+];
+
+// Enhanced CORS configuration
 app.use(
   cors({
-    origin: "*", // Allow all origins during development
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps, curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) === -1) {
+        console.log(`CORS blocked request from: ${origin}`);
+        return callback(null, true); // Changed from error to allow all origins during development
+      }
+
+      console.log(`CORS allowed request from: ${origin}`);
+      return callback(null, true);
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   })
 );
+
+// Middleware to log requests
+app.use((req, res, next) => {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} ${req.url} (Origin: ${
+      req.headers.origin || "no origin"
+    })`
+  );
+  next();
+});
 
 // Configure session middleware
 app.use(
@@ -237,6 +270,124 @@ app.get("/api/projects/:id", async (req, res) => {
   }
 });
 
+// Get single experience by ID
+app.get("/api/experience/:id", async (req, res) => {
+  try {
+    await db.connectDB();
+
+    // Check if ID is valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: "Invalid experience ID format" });
+    }
+
+    const experience = await Experience.findById(req.params.id);
+
+    if (!experience) {
+      return res.status(404).json({ error: "Experience not found" });
+    }
+    res.json(experience);
+  } catch (error) {
+    console.error("Error fetching experience:", error);
+    res.status(500).json({ error: "Failed to fetch experience details" });
+  }
+});
+
+// Create new experience
+app.post("/api/admin/experience", isAuthenticated, async (req, res) => {
+  try {
+    const { company, position, startDate, endDate, description, featured } =
+      req.body;
+
+    if (!company || !position) {
+      return res
+        .status(400)
+        .json({ error: "Company and position are required" });
+    }
+
+    await db.connectDB();
+    const newExperience = new Experience({
+      company,
+      position,
+      startDate: startDate || "",
+      endDate: endDate || "",
+      description: description || "",
+      featured: featured || false,
+    });
+
+    await newExperience.save();
+    res.status(201).json(newExperience);
+  } catch (error) {
+    console.error("Error creating experience:", error);
+    res.status(500).json({ error: "Failed to create experience" });
+  }
+});
+
+// Update experience
+app.put("/api/admin/experience/:id", isAuthenticated, async (req, res) => {
+  try {
+    const { company, position, startDate, endDate, description, featured } =
+      req.body;
+
+    if (!company || !position) {
+      return res
+        .status(400)
+        .json({ error: "Company and position are required" });
+    }
+
+    await db.connectDB();
+
+    // Check if ID is valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: "Invalid experience ID format" });
+    }
+
+    const updatedExperience = await Experience.findByIdAndUpdate(
+      req.params.id,
+      {
+        company,
+        position,
+        startDate: startDate || "",
+        endDate: endDate || "",
+        description: description || "",
+        featured: featured || false,
+      },
+      { new: true }
+    );
+
+    if (!updatedExperience) {
+      return res.status(404).json({ error: "Experience not found" });
+    }
+
+    res.json(updatedExperience);
+  } catch (error) {
+    console.error("Error updating experience:", error);
+    res.status(500).json({ error: "Failed to update experience" });
+  }
+});
+
+// Delete experience
+app.delete("/api/admin/experience/:id", isAuthenticated, async (req, res) => {
+  try {
+    await db.connectDB();
+
+    // Check if ID is valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: "Invalid experience ID format" });
+    }
+
+    const deletedExperience = await Experience.findByIdAndDelete(req.params.id);
+
+    if (!deletedExperience) {
+      return res.status(404).json({ error: "Experience not found" });
+    }
+
+    res.json({ message: "Experience deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting experience:", error);
+    res.status(500).json({ error: "Failed to delete experience" });
+  }
+});
+
 // ADMIN API Endpoints (Protected routes)
 // Create a new project (Admin only)
 app.post("/api/admin/projects", isAuthenticated, async (req, res) => {
@@ -349,10 +500,40 @@ app.delete("/api/admin/projects/:id", isAuthenticated, async (req, res) => {
 
 // Routes for experience data - use the dedicated router
 
-// Add a test endpoint to confirm server is running
+// Add an expanded test endpoint for CORS and connection testing
 app.get("/api/test", (req, res) => {
-  res.json({
+  // Return detailed information about the request for debugging
+  const requestInfo = {
     message: "API server is running correctly",
+    timestamp: new Date().toISOString(),
+    request: {
+      method: req.method,
+      path: req.path,
+      headers: req.headers,
+      query: req.query,
+      cookies: req.cookies,
+      ip: req.ip,
+    },
+    server: {
+      nodeVersion: process.version,
+      platform: process.platform,
+      memory: process.memoryUsage(),
+    },
+  };
+
+  res.json(requestInfo);
+});
+
+// Add a CORS specific test endpoint
+app.options("/api/test-cors", cors(), (req, res) => {
+  res.status(204).end();
+});
+
+app.get("/api/test-cors", (req, res) => {
+  res.json({
+    success: true,
+    message: "CORS is properly configured",
+    origin: req.headers.origin || "No origin header found",
     timestamp: new Date().toISOString(),
   });
 });
