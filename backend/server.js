@@ -55,6 +55,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Trust proxy - needed for secure cookies behind a proxy (like on Render.com)
+app.set("trust proxy", 1);
+
 // Configure session middleware
 app.use(
   session({
@@ -63,10 +66,12 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true, // Set to true since you're in production
-      sameSite: "none", // Change from 'lax' to 'none' to allow cross-site
+      secure: true, // Must be true for sameSite: 'none'
+      sameSite: "none", // This allows cross-site cookies
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
+    // Ensure proxy is trusted to maintain secure cookies over HTTPS
+    proxy: true,
   })
 );
 
@@ -183,9 +188,24 @@ app.post("/api/admin/login", async (req, res) => {
     req.session.adminId = admin._id.toString();
     req.session.username = admin.username;
 
-    res.status(200).json({
-      message: "Login successful",
-      admin: { username: admin.username, id: admin._id },
+    // Log session creation for debugging
+    console.log("Session created:", {
+      id: req.sessionID,
+      isAuthenticated: req.session.isAuthenticated,
+      username: req.session.username,
+      cookie: req.session.cookie,
+    });
+
+    // Save session explicitly to ensure cookie is set
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+      }
+
+      res.status(200).json({
+        message: "Login successful",
+        admin: { username: admin.username, id: admin._id },
+      });
     });
   } catch (error) {
     console.error("Error logging in:", error);
@@ -310,18 +330,7 @@ app.get("/api/experience/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch experience details" });
   }
 });
-app.use(
-  session({
-    secret: process.env.SESSIONSECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
-  })
-);
+
 // Create new experience
 app.post("/api/admin/experience", isAuthenticated, async (req, res) => {
   try {
