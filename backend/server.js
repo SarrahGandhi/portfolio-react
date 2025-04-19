@@ -223,7 +223,16 @@ app.get("/", async (req, res) => {
   const projects = await Project.find({});
   res.send(projects);
 });
-
+app.get("/api/admin", async (req, res) => {
+  try {
+    await db.connectDB();
+    const projects = await Admin.find({});
+    res.json(projects);
+  } catch (error) {
+    console.error("Error fetching admin:", error);
+    res.status(500).json({ error: "Failed to fetch projects" });
+  }
+});
 app.get("/api/projects", async (req, res) => {
   try {
     await db.connectDB();

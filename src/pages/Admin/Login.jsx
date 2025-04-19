@@ -24,10 +24,9 @@ const Login = () => {
         console.log("API base URL:", API_BASE_URL);
         console.log("Is production:", IS_PRODUCTION);
 
-        const response = await fetch(ENDPOINTS.checkAuth, {
-          method: "GET",
-          ...SARRAH_DOMAIN_OPTIONS,
-        });
+        const response = await fetch(
+          "https://portfolio-react-c64m.onrender.com/api/admin"
+        );
 
         console.log("Auth check response status:", response.status);
         const data = await response.json();
