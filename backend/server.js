@@ -63,8 +63,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // Try this for testing
-      sameSite: "lax", // Add this
+      secure: true, // Set to true since you're in production
+      sameSite: "none", // Change from 'lax' to 'none' to allow cross-site
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
   })
