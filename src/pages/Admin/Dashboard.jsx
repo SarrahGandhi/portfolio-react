@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("projects");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   // Check authentication and fetch data
@@ -22,21 +23,29 @@ const Dashboard = () => {
     const checkAuthAndFetchData = async () => {
       try {
         console.log("Checking auth and fetching data...");
-        // Check if user is authenticated
-        const authResponse = await fetch(ENDPOINTS.checkAuth, {
-          method: "GET",
-          ...SARRAH_DOMAIN_OPTIONS, // Use special options for sarrahgandhi.com
-        });
+
+        // Use the admin API endpoint directly
+        const authResponse = await fetch(
+          "https://portfolio-react-c64m.onrender.com/api/admin",
+          {
+            method: "GET",
+            ...SARRAH_DOMAIN_OPTIONS,
+          }
+        );
 
         console.log("Auth response status:", authResponse.status);
         const authData = await authResponse.json();
         console.log("Auth data:", authData);
 
-        if (!authData.isAuthenticated) {
+        // If no data or empty array, consider not authenticated
+        if (!authData || authData.length === 0) {
           console.log("User not authenticated, redirecting to login");
           navigate("/admin/login");
           return;
         }
+
+        // Set user data from the response
+        setUser(authData[0]);
 
         // Fetch projects
         console.log(`Fetching projects from ${ENDPOINTS.projects}`);
@@ -183,7 +192,12 @@ const Dashboard = () => {
     <div className="admin-dashboard">
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
-        <div>
+        <div className="admin-user-info">
+          {user && (
+            <div className="admin-welcome">
+              Welcome, <span className="admin-username">{user.username}</span>
+            </div>
+          )}
           <button onClick={handleLogout} className="admin-logout-btn">
             Logout
           </button>

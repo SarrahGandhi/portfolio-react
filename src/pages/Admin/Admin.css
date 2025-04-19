@@ -96,6 +96,23 @@
   border-bottom: 1px solid #eee;
 }
 
+/* User info styles */
+.admin-user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.admin-welcome {
+  font-size: 14px;
+  color: #555;
+}
+
+.admin-username {
+  font-weight: bold;
+  color: #000;
+}
+
 /* Tabs for Dashboard Sections */
 .admin-tabs {
   display: flex;

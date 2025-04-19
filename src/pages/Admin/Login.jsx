@@ -25,14 +25,19 @@ const Login = () => {
         console.log("Is production:", IS_PRODUCTION);
 
         const response = await fetch(
-          "https://portfolio-react-c64m.onrender.com/api/admin"
+          "https://portfolio-react-c64m.onrender.com/api/admin",
+          {
+            method: "GET",
+            ...SARRAH_DOMAIN_OPTIONS,
+          }
         );
 
         console.log("Auth check response status:", response.status);
         const data = await response.json();
         console.log("Auth check data:", data);
 
-        if (data.isAuthenticated) {
+        // If we get data back and it's not an empty array, user is authenticated
+        if (data && data.length > 0) {
           console.log("User already authenticated, redirecting to dashboard");
           navigate("/admin/dashboard");
         }
@@ -41,6 +46,8 @@ const Login = () => {
         // If there's an error checking auth, we just stay on the login page
       }
     };
+
+    checkAuthStatus();
   }, [navigate]);
 
   const handleSubmit = async (e) => {
