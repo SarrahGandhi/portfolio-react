@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   ENDPOINTS,
   SARRAH_DOMAIN_OPTIONS,
@@ -13,9 +13,23 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [justLoggedOut, setJustLoggedOut] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    // Check for logout parameter
+    const params = new URLSearchParams(location.search);
+    const fromLogout = params.get("logout") === "true";
+
+    if (fromLogout) {
+      setJustLoggedOut(true);
+      // Clear the parameter from URL
+      const newUrl = window.location.pathname;
+      window.history.replaceState(null, "", newUrl);
+      return; // Skip auth check if we just logged out
+    }
+
     // Check if we're already logged in on component mount
     const checkAuthStatus = async () => {
       try {
@@ -24,20 +38,22 @@ const Login = () => {
         console.log("API base URL:", API_BASE_URL);
         console.log("Is production:", IS_PRODUCTION);
 
-        const response = await fetch(
-          "https://portfolio-react-c64m.onrender.com/api/admin",
-          {
-            method: "GET",
-            ...SARRAH_DOMAIN_OPTIONS,
-          }
-        );
+        // Use the specific check-auth endpoint instead of general admin endpoint
+        const response = await fetch(ENDPOINTS.checkAuth, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          mode: "cors",
+        });
 
         console.log("Auth check response status:", response.status);
         const data = await response.json();
         console.log("Auth check data:", data);
 
-        // If we get data back and it's not an empty array, user is authenticated
-        if (data && data.length > 0) {
+        // Only redirect if we have confirmation of authentication
+        if (data && data.isAuthenticated === true) {
           console.log("User already authenticated, redirecting to dashboard");
           navigate("/admin/dashboard");
         }
@@ -47,8 +63,10 @@ const Login = () => {
       }
     };
 
-    checkAuthStatus();
-  }, [navigate]);
+    if (!justLoggedOut) {
+      checkAuthStatus();
+    }
+  }, [navigate, location.search, justLoggedOut]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,11 +79,10 @@ const Login = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...SARRAH_DOMAIN_OPTIONS.headers,
         },
         body: JSON.stringify({ username, password }),
-        credentials: SARRAH_DOMAIN_OPTIONS.credentials || "include",
-        mode: SARRAH_DOMAIN_OPTIONS.mode || "cors",
+        credentials: "include",
+        mode: "cors",
       });
 
       console.log("Login response status:", response.status);
@@ -92,6 +109,11 @@ const Login = () => {
     <div className="admin-login-container">
       <div className="admin-login-form">
         <h2>Admin Login</h2>
+        {justLoggedOut && (
+          <div className="admin-success">
+            You have been successfully logged out.
+          </div>
+        )}
         {error && <div className="admin-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">

@@ -104,18 +104,36 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     try {
+      console.log(`Attempting to logout using ${ENDPOINTS.logout}`);
       const response = await fetch(ENDPOINTS.logout, {
         method: "POST",
-        ...SARRAH_DOMAIN_OPTIONS,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors",
       });
 
+      console.log("Logout response status:", response.status);
+
       if (response.ok) {
-        navigate("/admin/login");
+        console.log("Logout successful, redirecting to login");
+        navigate("/admin/login?logout=true");
+      } else {
+        // Try to get the error message
+        try {
+          const errorData = await response.json();
+          console.error("Logout failed:", errorData);
+        } catch (parseError) {
+          console.error("Failed to parse logout error response");
+        }
+        // Even if logout fails on server, we'll still redirect to login with logout parameter
+        navigate("/admin/login?logout=true");
       }
     } catch (error) {
       console.error("Logout error:", error);
-      // Even if logout fails, we'll still redirect to login
-      navigate("/admin/login");
+      // Even if logout fails, we'll still redirect to login with logout parameter
+      navigate("/admin/login?logout=true");
     }
   };
 
