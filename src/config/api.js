@@ -79,9 +79,9 @@ export const FETCH_OPTIONS = {
 // Special options for sarrahgandhi.com domain
 export const SARRAH_DOMAIN_OPTIONS = {
   ...FETCH_OPTIONS,
-  // On sarrahgandhi.com, we might need to avoid credentials
-  credentials: isSarrahDomain ? "omit" : "include",
-  mode: isSarrahDomain ? "cors" : undefined,
+  // Use include credentials for all domains to allow authentication
+  credentials: "include",
+  mode: "cors",
 };
 
 /**
@@ -96,13 +96,11 @@ export const apiRequest = async (url, options = {}) => {
   const mergedOptions = {
     ...FETCH_OPTIONS,
     ...options,
+    credentials: "include", // Always use include for authentication
   };
 
-  // For sarrahgandhi.com domain, adjust options
-  if (isSarrahDomain) {
-    mergedOptions.credentials = options.credentials || "omit";
-    mergedOptions.mode = options.mode || "cors";
-  }
+  // For CORS requests, explicitly set the mode
+  mergedOptions.mode = "cors";
 
   console.log("Request options:", mergedOptions);
 
@@ -154,14 +152,10 @@ export const tryMultipleEndpoints = async (urls, options = {}) => {
       const mergedOptions = {
         ...FETCH_OPTIONS,
         ...options,
+        credentials: "include", // Always use include for authentication
+        mode: "cors", // Always use CORS mode
         signal: AbortSignal.timeout(8000), // 8 second timeout
       };
-
-      // For sarrahgandhi.com domain, adjust options
-      if (isSarrahDomain) {
-        mergedOptions.credentials = options.credentials || "omit";
-        mergedOptions.mode = options.mode || "cors";
-      }
 
       const response = await fetch(url, mergedOptions);
 

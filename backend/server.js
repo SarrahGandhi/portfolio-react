@@ -15,11 +15,13 @@ const port = process.env.PORT || 5001;
 // Set up CORS to allow requests from your frontend domains
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://localhost:5000",
+  "http://localhost:5001",
   "http://127.0.0.1:3000",
-  "http://127.0.0.1:5000",
+  "http://127.0.0.1:5001",
   "https://www.sarrahgandhi.com",
   "https://sarrahgandhi.com",
+  "http://sarrahgandhi.com",
+  "http://www.sarrahgandhi.com",
 ];
 
 // Enhanced CORS configuration
@@ -29,13 +31,17 @@ app.use(
       // Allow requests with no origin (like mobile apps, curl requests)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) === -1) {
-        console.log(`CORS blocked request from: ${origin}`);
-        return callback(null, true); // Changed from error to allow all origins during development
+      // Check if the origin is allowed
+      if (
+        allowedOrigins.indexOf(origin) !== -1 ||
+        origin.endsWith("sarrahgandhi.com")
+      ) {
+        console.log(`CORS allowed request from: ${origin}`);
+        return callback(null, true);
       }
 
-      console.log(`CORS allowed request from: ${origin}`);
-      return callback(null, true);
+      console.log(`CORS blocked request from: ${origin}`);
+      return callback(null, true); // Allow all origins in development for now
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
@@ -58,13 +64,16 @@ app.use((req, res, next) => {
 // Configure session middleware
 app.use(
   session({
-    secret: process.env.SESSIONSECRET,
+    secret: process.env.SESSIONSECRET || "portfolio-session-secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "none", // Allows cross-site cookies
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      domain:
+        process.env.NODE_ENV === "production" ? ".sarrahgandhi.com" : undefined,
     },
   })
 );
@@ -115,12 +124,20 @@ const Admin = mongoose.model("admins", adminSchema);
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
-  console.log("Authentication check - Session data:", req.session);
+  console.log("Authentication check - Session:", {
+    id: req.sessionID,
+    isAuthenticated: req.session.isAuthenticated,
+    cookies: req.headers.cookie,
+    origin: req.headers.origin,
+    userAgent: req.headers["user-agent"],
+  });
 
   if (req.session.isAuthenticated) {
+    console.log("Authentication successful for user:", req.session.username);
     return next();
   }
 
+  console.log("Authentication failed - no valid session");
   res.status(401).json({ error: "Unauthorized. Please login first." });
 };
 
