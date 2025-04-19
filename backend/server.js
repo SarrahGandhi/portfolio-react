@@ -136,17 +136,16 @@ app.post("/api/admin/register", async (req, res) => {
   try {
     // Check if admin already exists
     await db.connectDB();
-    const adminCount = await Admin.countDocuments();
-    if (adminCount > 0) {
-      return res.status(400).json({ error: "Admin already exists" });
-    }
 
     // Validate request
     const { username, password } = req.body;
     if (!username || !password) {
       return res.status(400).json({ error: "All fields are required" });
     }
-
+    const adminCount = await Admin.findOne({ username: username });
+    if (adminCount) {
+      return res.status(400).json({ error: "Admin already exists" });
+    }
     // Create new admin - using plaintext password for simplicity
     // In a production app, you'd want to use password hashing
     const admin = new Admin({
