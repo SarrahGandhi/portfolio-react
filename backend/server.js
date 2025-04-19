@@ -63,7 +63,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false, // Try this for testing
+      sameSite: "lax", // Add this
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
   })
@@ -204,6 +205,15 @@ app.post("/api/admin/logout", (req, res) => {
 
 // Check auth status
 app.get("/api/admin/check-auth", (req, res) => {
+  console.log("Checking auth status:", {
+    sessionID: req.sessionID,
+    isAuthenticated: req.session.isAuthenticated,
+    username: req.session.username,
+    headers: {
+      origin: req.headers.origin,
+      cookie: req.headers.cookie,
+    },
+  });
   if (req.session.isAuthenticated) {
     return res.json({
       isAuthenticated: true,
@@ -300,7 +310,18 @@ app.get("/api/experience/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch experience details" });
   }
 });
-
+app.use(
+  session({
+    secret: process.env.SESSIONSECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
 // Create new experience
 app.post("/api/admin/experience", isAuthenticated, async (req, res) => {
   try {
