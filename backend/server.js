@@ -253,13 +253,17 @@ app.get("/", async (req, res) => {
   res.send(projects);
 });
 app.get("/api/admin", async (req, res) => {
+  const username = req.session.username;
+  if (!username) {
+    return res.status(401).json({ error: "Unauthorized. Please login first." });
+  }
   try {
     await db.connectDB();
-    const projects = await Admin.find({});
-    res.json(projects);
+    const userInfo = await Admin.find({ username: username });
+    res.json(userInfo);
   } catch (error) {
     console.error("Error fetching admin:", error);
-    res.status(500).json({ error: "Failed to fetch projects" });
+    res.status(500).json({ error: "Failed to fetch user data" });
   }
 });
 app.get("/api/projects", async (req, res) => {
@@ -270,6 +274,25 @@ app.get("/api/projects", async (req, res) => {
   } catch (error) {
     console.error("Error fetching projects:", error);
     res.status(500).json({ error: "Failed to fetch projects" });
+  }
+});
+app.get("/api/admin/:id", async (req, res) => {
+  try {
+    await db.connectDB();
+    console.log("Fetching project with ID:", req.params.id);
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      console.error("Invalid MongoDB ObjectId:", req.params.id);
+      return res.status(400).json({ error: "Invalid project ID format" });
+    }
+    const project = await Project.findById(req.params.id);
+    console.log("Project found:", project);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    res.json(project);
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    res.status(500).json({ error: "Failed to fetch project details" });
   }
 });
 app.get("/api/experience", async (req, res) => {

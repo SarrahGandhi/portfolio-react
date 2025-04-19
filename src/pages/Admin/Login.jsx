@@ -91,10 +91,31 @@ const Login = () => {
       console.log("Login response status:", response.status);
       const data = await response.json();
       console.log("Login response data:", data);
+      console.log("Login data structure:", {
+        hasUser: !!data.user,
+        userKeys: data.user ? Object.keys(data.user) : null,
+        dataKeys: Object.keys(data),
+      });
 
       if (response.ok) {
         // Successfully logged in
         console.log("Login successful, redirecting to dashboard");
+
+        // Store the user ID in localStorage if available
+        if (data && data.user && data.user._id) {
+          localStorage.setItem("userId", data.user._id);
+          console.log("User ID stored in localStorage:", data.user._id);
+        } else if (data && data._id) {
+          // Alternative data structure - direct user object
+          localStorage.setItem("userId", data._id);
+          console.log(
+            "User ID stored in localStorage (from direct data):",
+            data._id
+          );
+        } else {
+          console.warn("Could not find user ID in login response");
+        }
+
         navigate(from);
       } else {
         // Login failed

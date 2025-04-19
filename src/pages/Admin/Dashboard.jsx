@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import {
-  ENDPOINTS,
-  FETCH_OPTIONS,
-  apiRequest,
-  tryMultipleEndpoints,
-  SARRAH_DOMAIN_OPTIONS,
-} from "../../config/api";
+import { ENDPOINTS, SARRAH_DOMAIN_OPTIONS } from "../../config/api";
 import "./Admin.css";
 
 const Dashboard = () => {
@@ -36,16 +30,75 @@ const Dashboard = () => {
         console.log("Auth response status:", authResponse.status);
         const authData = await authResponse.json();
         console.log("Auth data:", authData);
+        console.log("Auth data type:", typeof authData);
+        console.log("Auth data is array:", Array.isArray(authData));
+        console.log("Auth data keys:", Object.keys(authData));
 
         // If no data or empty array, consider not authenticated
-        if (!authData || authData.length === 0) {
+        if (!authData || (Array.isArray(authData) && authData.length === 0)) {
           console.log("User not authenticated, redirecting to login");
           navigate("/admin/login");
           return;
         }
 
-        // Set user data from the response
-        setUser(authData[0]);
+        // Get user ID from localStorage (saved during login)
+        const userId = localStorage.getItem("userId");
+        console.log("Retrieved userId from localStorage:", userId);
+
+        // Handle different response formats from the API
+        let userData = null;
+
+        if (Array.isArray(authData) && authData.length > 0) {
+          // If authData is an array of users
+          if (userId) {
+            // Try to find the specific user by ID
+            const currentUser = authData.find((user) => user._id === userId);
+            if (currentUser) {
+              userData = currentUser;
+              console.log("Found specific user by ID:", userData);
+            } else {
+              // If user not found by ID, use the first user
+              userData = authData[0];
+              console.log("User ID not found, using first user:", userData);
+            }
+          } else {
+            // No user ID, use the first user in the array
+            userData = authData[0];
+            console.log(
+              "No user ID in localStorage, using first user:",
+              userData
+            );
+          }
+        } else if (typeof authData === "object") {
+          // Handle case where authData is a single user object or contains user info
+          if (authData.user) {
+            userData = authData.user;
+            console.log("Using authData.user as userData:", userData);
+          } else if (authData.username) {
+            // authData itself is a user object
+            userData = authData;
+            console.log("Using authData as userData (has username):", userData);
+          } else if (
+            authData.users &&
+            Array.isArray(authData.users) &&
+            authData.users.length > 0
+          ) {
+            // If authData has a users array
+            userData = authData.users[0];
+            console.log("Using first user from authData.users:", userData);
+          }
+        }
+
+        // Fallback if we couldn't extract user data properly
+        if (!userData) {
+          console.warn(
+            "Could not extract user data from response, using default"
+          );
+          userData = { username: "Admin" };
+        }
+
+        console.log("Final userData being set:", userData);
+        setUser(userData);
 
         // Fetch projects
         console.log(`Fetching projects from ${ENDPOINTS.projects}`);
@@ -187,6 +240,22 @@ const Dashboard = () => {
     }
   };
 
+  const extractUsername = (user) => {
+    if (!user) return "Admin";
+
+    // If user is directly a string
+    if (typeof user === "string") return user;
+
+    // If user has username property
+    if (user.username) return user.username;
+
+    // If user has nested user object with username
+    if (user.user && user.user.username) return user.user.username;
+
+    // Fallback
+    return "Admin";
+  };
+
   if (loading) {
     return <div className="admin-dashboard">Loading...</div>;
   }
@@ -213,7 +282,8 @@ const Dashboard = () => {
         <div className="admin-user-info">
           {user && (
             <div className="admin-welcome">
-              Welcome, <span className="admin-username">{user.username}</span>
+              Welcome,{" "}
+              <span className="admin-username">{extractUsername(user)}</span>
             </div>
           )}
           <button onClick={handleLogout} className="admin-logout-btn">
