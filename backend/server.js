@@ -68,8 +68,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only use secure in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Use 'none' in production, 'lax' in development
+      secure: true, // Must be true for sameSite: 'none'
+      sameSite: "none", // This allows cross-site cookies
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
     // Ensure proxy is trusted to maintain secure cookies over HTTPS
