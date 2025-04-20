@@ -123,7 +123,27 @@ const Login = () => {
           console.warn("Could not find user ID in login response");
         }
 
-        navigate(from);
+        // Add a small delay to ensure session is properly saved on the server
+        setTimeout(() => {
+          // Perform a check-auth request to verify the session was properly saved
+          fetch(ENDPOINTS.checkAuth, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            mode: "cors",
+          })
+            .then((authResponse) => authResponse.json())
+            .then((authData) => {
+              console.log("Auth verification after login:", authData);
+              navigate(from);
+            })
+            .catch((error) => {
+              console.error("Error verifying auth after login:", error);
+              navigate(from); // Navigate anyway
+            });
+        }, 500);
       } else {
         // Login failed
         setError(data.error || "Invalid login credentials");
