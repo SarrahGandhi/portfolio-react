@@ -18,38 +18,87 @@ const Dashboard = () => {
       try {
         console.log("Checking auth and fetching data...");
 
-        // Use the check-auth endpoint instead of the admin endpoint
-        const authResponse = await fetch(ENDPOINTS.checkAuth, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          mode: "cors",
-        });
+        // Use the admin API endpoint directly
+        const authResponse = await fetch(
+          "https://portfolio-react-c64m.onrender.com/api/admin",
+          {
+            method: "GET",
+            ...SARRAH_DOMAIN_OPTIONS,
+          }
+        );
 
         console.log("Auth response status:", authResponse.status);
         const authData = await authResponse.json();
         console.log("Auth data:", authData);
+        console.log("Auth data type:", typeof authData);
+        console.log("Auth data is array:", Array.isArray(authData));
+        console.log("Auth data keys:", Object.keys(authData));
 
-        // Check if authenticated based on the proper response format
-        if (!authData || authData.isAuthenticated !== true) {
+        // If no data or empty array, consider not authenticated
+        if (!authData || (Array.isArray(authData) && authData.length === 0)) {
           console.log("User not authenticated, redirecting to login");
           navigate("/admin/login");
           return;
         }
 
-        // Retrieve user data from the auth response
-        if (authData.user) {
-          setUser({
-            username: authData.user.username,
-            _id: authData.user._id,
-          });
-        }
-
         // Get user ID from localStorage (saved during login)
         const userId = localStorage.getItem("userId");
         console.log("Retrieved userId from localStorage:", userId);
+
+        // Handle different response formats from the API
+        let userData = null;
+
+        if (Array.isArray(authData) && authData.length > 0) {
+          // If authData is an array of users
+          if (userId) {
+            // Try to find the specific user by ID
+            const currentUser = authData.find((user) => user._id === userId);
+            if (currentUser) {
+              userData = currentUser;
+              console.log("Found specific user by ID:", userData);
+            } else {
+              // If user not found by ID, use the first user
+              userData = authData[0];
+              console.log("User ID not found, using first user:", userData);
+            }
+          } else {
+            // No user ID, use the first user in the array
+            userData = authData[0];
+            console.log(
+              "No user ID in localStorage, using first user:",
+              userData
+            );
+          }
+        } else if (typeof authData === "object") {
+          // Handle case where authData is a single user object or contains user info
+          if (authData.user) {
+            userData = authData.user;
+            console.log("Using authData.user as userData:", userData);
+          } else if (authData.username) {
+            // authData itself is a user object
+            userData = authData;
+            console.log("Using authData as userData (has username):", userData);
+          } else if (
+            authData.users &&
+            Array.isArray(authData.users) &&
+            authData.users.length > 0
+          ) {
+            // If authData has a users array
+            userData = authData.users[0];
+            console.log("Using first user from authData.users:", userData);
+          }
+        }
+
+        // Fallback if we couldn't extract user data properly
+        if (!userData) {
+          console.warn(
+            "Could not extract user data from response, using default"
+          );
+          userData = { username: "Admin" };
+        }
+
+        console.log("Final userData being set:", userData);
+        setUser(userData);
 
         // Fetch projects
         console.log(`Fetching projects from ${ENDPOINTS.projects}`);
