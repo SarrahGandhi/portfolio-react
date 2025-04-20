@@ -42,6 +42,8 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
     preflightContinue: false,
     optionsSuccessStatus: 204,
+    origin: "https://sarrahgandhi.com", // must match Vercel domain
+    credentials: true, // MUST be true for cookies
   })
 );
 
@@ -66,8 +68,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true, // Must be true for sameSite: 'none'
-      sameSite: "none", // This allows cross-site cookies
+      secure: process.env.NODE_ENV === "production", // Only use secure in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Use 'none' in production, 'lax' in development
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
     // Ensure proxy is trusted to maintain secure cookies over HTTPS
