@@ -42,8 +42,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
     preflightContinue: false,
     optionsSuccessStatus: 204,
-    origin: "https://sarrahgandhi.com", // must match Vercel domain
-    credentials: true, // MUST be true for cookies
   })
 );
 
