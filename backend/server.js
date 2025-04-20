@@ -203,7 +203,7 @@ app.post("/api/admin/login", async (req, res) => {
 
       res.status(200).json({
         message: "Login successful",
-        admin: { username: admin.username, id: admin._id },
+        user: { _id: admin._id, username: admin.username },
       });
     });
   } catch (error) {
