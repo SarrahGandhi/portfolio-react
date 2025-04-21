@@ -104,7 +104,7 @@ This runs both frontend and backend concurrently:
 
 - Frontend: www.sarrahgandhi.com
 - Backend: www.sarrahgandhi.com/admin/login
-  (Make sure your borwser allows third party cookies)
+  (Make sure your browser allows third party cookies)
 
 #### Frontend only
 
