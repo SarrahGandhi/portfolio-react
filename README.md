@@ -102,8 +102,9 @@ npm run dev
 
 This runs both frontend and backend concurrently:
 
-- Frontend: http://localhost:3000
-- Backend: http://localhost:5001
+- Frontend: www.sarrahgandhi.com
+- Backend: www.sarrahgandhi.com/admin/login
+  (Make sure your borwser allows third party cookies)
 
 #### Frontend only
 
