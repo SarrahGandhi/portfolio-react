@@ -233,7 +233,7 @@ const Resume = () => {
             <li>Relevant Coursework: Frontend Frameworks, Version Control with Git and Github, Full Stack Development, Database Management, Responsive Web Design</li>
           </ul>
         </div>
-      </div>
+     
     
         <div className="entry">
           <h4>Entrepreneurship Management</h4>
@@ -259,7 +259,7 @@ const Resume = () => {
           
           </ul>
         </div>
-
+ </div>
     </section>
   );
 };
