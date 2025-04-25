@@ -230,10 +230,36 @@ const Resume = () => {
           <p className="date">2024 - 2025</p>
           <ul>
             <li>GPA: 3.8</li>
-          
+            <li>Relevant Coursework: Frontend Frameworks, Version Control with Git and Github, Full Stack Development, Database Management, Responsive Web Design</li>
           </ul>
         </div>
       </div>
+    
+        <div className="entry">
+          <h4>Entrepreneurship Management</h4>
+          <p className="institution">George Brown College</p>
+          <p className="date">2023 - 2024</p>
+          <ul>
+            <li>GPA: 3.8</li>
+            <li>Relevant Coursework: Leadership, Innovation, Digital Marketing Strategy, Understanding Digital platforms for SEO</li>
+
+          
+          </ul>
+        </div>
+    
+    
+        <div className="entry">
+          <h4>Bachelor's in Vocation in Visual Media and Filmmaking</h4>
+          <p className="institution">St Joseph's University</p>
+          <p className="date">2018 - 2020</p>
+          <ul>
+            <li>GPA: 3.8</li>
+            <li>Relevant Coursework: Visual Design and Composition, Storytelling for screens, User Experience, Graphics and Animation</li>
+
+          
+          </ul>
+        </div>
+
     </section>
   );
 };
