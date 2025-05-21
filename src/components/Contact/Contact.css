@@ -14,7 +14,7 @@
 
 .contact-info .line {
   width: 100%;
-  border-bottom: 3.5px solid;
+  border-bottom: 2px solid;
   background-color: #000;
   margin: 0px;
   position: relative;
@@ -32,7 +32,7 @@
   flex-direction: column;
   padding: 20px;
   gap: 20px;
-  border: 3.5px solid #000;
+  border: 2px solid #000;
   box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
   background: #fff;
   top: 0;

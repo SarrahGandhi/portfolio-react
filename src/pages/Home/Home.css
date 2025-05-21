@@ -21,7 +21,7 @@
 }
 
 .hero-text > h1 {
-  font-size: 50px;
+  font-size: 40px;
   padding: 0 0 10px 0;
 }
 .hero-text > button {
@@ -31,7 +31,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 92px;
-  border: 8px solid #000;
+  border: 2px solid #000;
   background: #bae6ff;
   font-size: 29px;
   font-weight: bold;
@@ -76,7 +76,7 @@
 .languages-scroll {
   display: flex;
   gap: 40px;
-  animation: scroll 30s linear infinite;
+  animation: scroll 70s linear infinite;
   white-space: nowrap;
 }
 
