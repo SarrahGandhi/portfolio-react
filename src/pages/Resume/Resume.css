@@ -122,9 +122,7 @@
     padding: 40px 0;
   }
 
-  .resume-container {
-    padding: 0 20px;
-  }
+  
 
   .skills-grid {
     grid-template-columns: 1fr;
@@ -154,10 +152,7 @@
     margin-bottom: 30px;
   }
 
-  .resume-container {
-    padding: 0 15px;
-  }
-
+  
   .resume-block {
     padding: 15px;
   }
