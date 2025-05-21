@@ -25,11 +25,11 @@ const Home = () => {
     <section id="home" className="hero-section">
       <div className="hero-content">
         <div className="hero-text">
-          <h1>Designer by hobby</h1>
-          <h1>Developer by profession</h1>
-          <h1>Debugger by chance</h1>
+          <h1>Designs that speak. </h1>
+          <h1>Code that works.</h1>
+          <h1> Crafting digital experiences with purpose.</h1>
           <button>
-            <a href="#portfolio">Download Resume</a>
+            <a href="/resume.pdf">Download Resume</a>
           </button>
         </div>
         <aside className="photo">
