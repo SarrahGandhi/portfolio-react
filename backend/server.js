@@ -64,14 +64,13 @@ app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SESSIONSECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only use secure in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Use 'none' in production, 'lax' in development
+      secure: true, // Must be true for sameSite: 'none'
+      sameSite: "none", // This allows cross-site cookies
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      path: "/", // Ensure cookie is available for all paths
     },
     // Ensure proxy is trusted to maintain secure cookies over HTTPS
     proxy: true,
@@ -247,7 +246,7 @@ app.post("/api/admin/login", async (req, res) => {
 
       res.status(200).json({
         message: "Login successful",
-        user: { _id: admin._id, username: admin.username },
+        admin: { username: admin.username, id: admin._id },
       });
     });
   } catch (error) {
@@ -302,18 +301,15 @@ app.get("/api/admin/check-auth", (req, res) => {
       cookie: req.headers.cookie,
     },
   });
-
-  // Make sure to verify the session properties exist
-  if (req.session && req.session.isAuthenticated === true) {
+  if (req.session.isAuthenticated) {
     return res.json({
       isAuthenticated: true,
-      user: {
+      admin: {
         username: req.session.username,
-        _id: req.session.adminId,
+        id: req.session.adminId,
       },
     });
   }
-
   res.json({ isAuthenticated: false });
 });
 

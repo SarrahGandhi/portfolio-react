@@ -56,7 +56,7 @@ const Home = ({ mode = "web" }) => {
           <h1>{heroText.line2}</h1>
           <h1>{heroText.line3}</h1>
           <button>
-            <a href="#portfolio">Download Resume</a>
+            <a href="/resume.pdf">Download Resume</a>
           </button>
         </div>
         <aside className="photo">

@@ -105,13 +105,6 @@ const Login = () => {
         if (data && data.user && data.user._id) {
           localStorage.setItem("userId", data.user._id);
           console.log("User ID stored in localStorage:", data.user._id);
-        } else if (data && data.admin && data.admin.id) {
-          // Server returns admin object with id field
-          localStorage.setItem("userId", data.admin.id);
-          console.log(
-            "User ID stored in localStorage (from admin):",
-            data.admin.id
-          );
         } else if (data && data._id) {
           // Alternative data structure - direct user object
           localStorage.setItem("userId", data._id);
@@ -123,27 +116,7 @@ const Login = () => {
           console.warn("Could not find user ID in login response");
         }
 
-        // Add a small delay to ensure session is properly saved on the server
-        setTimeout(() => {
-          // Perform a check-auth request to verify the session was properly saved
-          fetch(ENDPOINTS.checkAuth, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            mode: "cors",
-          })
-            .then((authResponse) => authResponse.json())
-            .then((authData) => {
-              console.log("Auth verification after login:", authData);
-              navigate(from);
-            })
-            .catch((error) => {
-              console.error("Error verifying auth after login:", error);
-              navigate(from); // Navigate anyway
-            });
-        }, 500);
+        navigate(from);
       } else {
         // Login failed
         setError(data.error || "Invalid login credentials");
