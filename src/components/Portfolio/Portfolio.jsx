@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Portfolio.css";
 
-const Portfolio = () => {
+const Portfolio = ({ mode = "web" }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,12 +11,20 @@ const Portfolio = () => {
     const fetchProjects = async () => {
       try {
         setLoading(true);
+
+        // Fetch all projects from API
         const response = await fetch(
           "https://portfolio-react-c64m.onrender.com/api/projects"
         );
         const data = await response.json();
         console.log("Fetched projects:", data);
-        setProjects(data);
+
+        // Filter projects by type based on mode
+        const filteredProjects = data.filter(
+          (project) => project.type === mode
+        );
+
+        setProjects(filteredProjects);
         setError(null);
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -27,7 +35,7 @@ const Portfolio = () => {
     };
 
     fetchProjects();
-  }, []);
+  }, [mode]);
 
   if (loading) return <div className="loading">Loading projects...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -39,10 +47,25 @@ const Portfolio = () => {
 
   return (
     <section id="portfolio">
-      <h2>My Portfolio</h2>
+      <h2>
+        {mode === "graphic"
+          ? "My Design Portfolio"
+          : "My Development Portfolio"}
+      </h2>
       <div className="container">
         {featuredProjects.map((project, index) => (
           <div key={project?._id || index} className="portfolio-block">
+            {project?.imageUrl && (
+              <div className="portfolio-image">
+                <img
+                  src={`https://portfolio-react-c64m.onrender.com${project.imageUrl}`}
+                  alt={project.title}
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                  }}
+                />
+              </div>
+            )}
             <div className="portfolio-project-title">
               <h3>{project?.title}</h3>
             </div>

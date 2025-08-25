@@ -3,6 +3,8 @@ const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const session = require("express-session");
+const multer = require("multer");
+const fs = require("fs");
 dotenv.config();
 const db = require("./db");
 const mongoose = require("mongoose");
@@ -80,16 +82,57 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, "public", "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    // Generate unique filename with timestamp
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: function (req, file, cb) {
+    // Check if file is an image
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed!"), false);
+    }
+  },
+});
+
 // Project Schema
 const projectSchema = new mongoose.Schema({
   title: String,
   description: String,
+  short_description: String,
   technologies: [String],
   keyFeatures: [String],
   githubUrl: String,
   projectUrl: String,
   featured: Boolean,
   link: String,
+  type: {
+    type: String,
+    enum: ["web", "graphic"],
+    default: "web",
+  },
+  imageUrl: String, // Main project image
+  images: [String], // Array of additional images
 });
 const WorkSchema = new mongoose.Schema({
   company: String,
@@ -222,6 +265,31 @@ app.post("/api/admin/logout", (req, res) => {
     res.json({ message: "Logged out successfully" });
   });
 });
+
+// Image upload endpoint
+app.post(
+  "/api/admin/upload",
+  isAuthenticated,
+  upload.single("image"),
+  (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      // Return the URL path to the uploaded image
+      const imageUrl = `/uploads/${req.file.filename}`;
+      res.json({
+        message: "Image uploaded successfully",
+        imageUrl: imageUrl,
+        filename: req.file.filename,
+      });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      res.status(500).json({ error: "Failed to upload image" });
+    }
+  }
+);
 
 // Check auth status
 app.get("/api/admin/check-auth", (req, res) => {
@@ -460,11 +528,15 @@ app.post("/api/admin/projects", isAuthenticated, async (req, res) => {
     const {
       title,
       description,
+      short_description,
       technologies,
       keyFeatures,
       githubUrl,
       projectUrl,
       featured,
+      type,
+      imageUrl,
+      images,
     } = req.body;
 
     // Validate required fields
@@ -478,12 +550,16 @@ app.post("/api/admin/projects", isAuthenticated, async (req, res) => {
     const newProject = new Project({
       title,
       description,
+      short_description,
       technologies: technologies || [],
       keyFeatures: keyFeatures || [],
       githubUrl,
       projectUrl,
       featured: featured || false,
       link: projectUrl, // For backward compatibility
+      type: type || "web",
+      imageUrl: imageUrl || "",
+      images: images || [],
     });
 
     await newProject.save();
@@ -500,11 +576,15 @@ app.put("/api/admin/projects/:id", isAuthenticated, async (req, res) => {
     const {
       title,
       description,
+      short_description,
       technologies,
       keyFeatures,
       githubUrl,
       projectUrl,
       featured,
+      type,
+      imageUrl,
+      images,
     } = req.body;
 
     await db.connectDB();
@@ -519,12 +599,16 @@ app.put("/api/admin/projects/:id", isAuthenticated, async (req, res) => {
       {
         title,
         description,
+        short_description,
         technologies,
         keyFeatures,
         githubUrl,
         projectUrl,
         featured,
         link: projectUrl, // For backward compatibility
+        type,
+        imageUrl,
+        images,
       },
       { new: true }
     );

@@ -17,6 +17,9 @@ const ProjectForm = () => {
     githubUrl: "",
     projectUrl: "",
     featured: false,
+    type: "web",
+    imageUrl: "",
+    images: [],
   });
 
   const [loading, setLoading] = useState(isEditMode);
@@ -24,6 +27,7 @@ const ProjectForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [newTechnology, setNewTechnology] = useState("");
   const [newKeyFeature, setNewKeyFeature] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
 
   // Check authentication and fetch project if in edit mode
   useEffect(() => {
@@ -62,6 +66,9 @@ const ProjectForm = () => {
             projectUrl: projectData.projectUrl || "",
             short_description: projectData.short_description || "",
             featured: projectData.featured || false,
+            type: projectData.type || "web",
+            imageUrl: projectData.imageUrl || "",
+            images: projectData.images || [],
           });
         }
       } catch (error) {
@@ -121,6 +128,39 @@ const ProjectForm = () => {
       ...prevData,
       keyFeatures: prevData.keyFeatures.filter((f) => f !== feature),
     }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageUploading(true);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append("image", file);
+
+      const response = await fetch(ENDPOINTS.uploadImage, {
+        method: "POST",
+        credentials: "include",
+        body: formDataUpload,
+        // Don't set Content-Type header - let browser set it for FormData
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await response.json();
+      setFormData((prevData) => ({
+        ...prevData,
+        imageUrl: data.imageUrl,
+      }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setError("Failed to upload image");
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -287,6 +327,56 @@ const ProjectForm = () => {
             value={formData.projectUrl}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="admin-form-row">
+          <label htmlFor="type">Project Type*</label>
+          <select
+            id="type"
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            required
+          >
+            <option value="web">Web Development</option>
+            <option value="graphic">Graphic Design</option>
+          </select>
+        </div>
+
+        <div className="admin-form-row">
+          <label htmlFor="image">Project Image</label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            onChange={handleImageUpload}
+            disabled={imageUploading}
+          />
+          {imageUploading && (
+            <div className="admin-loading">Uploading image...</div>
+          )}
+          {formData.imageUrl && (
+            <div className="admin-image-preview">
+              <img
+                src={`https://portfolio-react-c64m.onrender.com${formData.imageUrl}`}
+                alt="Project preview"
+                style={{
+                  maxWidth: "200px",
+                  maxHeight: "150px",
+                  objectFit: "cover",
+                }}
+              />
+              <button
+                type="button"
+                className="admin-action-btn"
+                onClick={() =>
+                  setFormData((prev) => ({ ...prev, imageUrl: "" }))
+                }
+              >
+                Remove Image
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="admin-form-checkbox">

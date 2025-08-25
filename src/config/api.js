@@ -62,6 +62,9 @@ export const ENDPOINTS = {
   checkAuth: `${API_BASE_URL}/api/admin/check-auth`,
   logout: `${API_BASE_URL}/api/admin/logout`,
 
+  // File upload
+  uploadImage: `${API_BASE_URL}/api/admin/upload`,
+
   // Test endpoints
   test: `${API_BASE_URL}/api/test`,
   testCors: `${API_BASE_URL}/api/test-cors`,

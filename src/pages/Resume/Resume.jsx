@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ENDPOINTS } from "../../config/api";
 import "./Resume.css";
 
-const Resume = () => {
+const Resume = ({ mode = "web" }) => {
   const [experience, setExperience] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -201,24 +201,47 @@ const Resume = () => {
         </div>
       </div>
       <div className="resume-block skills">
-        <h3>Technical Skills</h3>
+        <h3>{mode === "graphic" ? "Design Skills" : "Technical Skills"}</h3>
         <div className="skills-grid">
-          <div className="skill-category">
-            <h4>Languages</h4>
-            <p>JavaScript, HTML5, CSS3, Python, Java</p>
-          </div>
-          <div className="skill-category">
-            <h4>Frameworks & Libraries</h4>
-            <p>React.js, Node.js, Express.js, Bootstrap</p>
-          </div>
-          <div className="skill-category">
-            <h4>Tools & Technologies</h4>
-            <p>Git, VS Code, Figma, Adobe Creative Suite</p>
-          </div>
-          <div className="skill-category">
-            <h4>Soft Skills</h4>
-            <p>Problem Solving, Team Collaboration, Project Management</p>
-          </div>
+          {mode === "graphic" ? (
+            <>
+              <div className="skill-category">
+                <h4>Design Software</h4>
+                <p>Adobe Photoshop, Adobe Illustrator, Adobe InDesign, Figma, Adobe XD</p>
+              </div>
+              <div className="skill-category">
+                <h4>Design Specialties</h4>
+                <p>Logo Design, Branding, Typography, Layout Design, Color Theory</p>
+              </div>
+              <div className="skill-category">
+                <h4>Print & Digital</h4>
+                <p>Business Cards, Brochures, Social Media Graphics, Web Graphics</p>
+              </div>
+              <div className="skill-category">
+                <h4>Creative Skills</h4>
+                <p>Visual Storytelling, Brand Strategy, Creative Problem Solving</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="skill-category">
+                <h4>Languages</h4>
+                <p>JavaScript, HTML5, CSS3, Python, Java</p>
+              </div>
+              <div className="skill-category">
+                <h4>Frameworks & Libraries</h4>
+                <p>React.js, Node.js, Express.js, Bootstrap</p>
+              </div>
+              <div className="skill-category">
+                <h4>Tools & Technologies</h4>
+                <p>Git, VS Code, Figma, Adobe Creative Suite</p>
+              </div>
+              <div className="skill-category">
+                <h4>Soft Skills</h4>
+                <p>Problem Solving, Team Collaboration, Project Management</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
 

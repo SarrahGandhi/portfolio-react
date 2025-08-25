@@ -21,15 +21,15 @@ const Header = () => {
           sarrah_gandhi
         </Link>
         <div className="desktop-links">
-          <a href="/#portfolio" className="nav-link">
+          <Link to="/home" className="nav-link">
             Portfolio//
-          </a>
+          </Link>
           <Link to="/resume" className="nav-link">
             Resume
           </Link>
-          <a href="/#contact" className="nav-link">
+          <Link to="/home" className="nav-link">
             Contact
-          </a>
+          </Link>
         </div>
         <button className="hamburger-button" onClick={toggleMenu}>
           <img src={menuIcon} alt="Menu" />
@@ -38,15 +38,15 @@ const Header = () => {
 
       <div className={`mobile-menu ${isMenuOpen ? "open" : ""}`}>
         <div className="mobile-menu-content">
-          <a href="/#portfolio" className="nav-link" onClick={closeMenu}>
+          <Link to="/home" className="nav-link" onClick={closeMenu}>
             Portfolio//
-          </a>
+          </Link>
           <Link to="/resume" className="nav-link" onClick={closeMenu}>
             Resume
           </Link>
-          <a href="/#contact" className="nav-link" onClick={closeMenu}>
+          <Link to="/home" className="nav-link" onClick={closeMenu}>
             Contact
-          </a>
+          </Link>
         </div>
       </div>
 
