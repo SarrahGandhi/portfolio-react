@@ -71,6 +71,9 @@ const Landing = ({ onModeSelect }) => {
 
         <main className="landing-main">
           <h1 className="landing-title">Hi, I am Sarrah Gandhi.</h1>
+          <p className="designer-subtitle">
+            Designer by hobby - Developer by profession - Debugger by chance
+          </p>
 
           <div className="character-image">
             <img src={caricatureImg} alt="Sarrah Gandhi Character" />
