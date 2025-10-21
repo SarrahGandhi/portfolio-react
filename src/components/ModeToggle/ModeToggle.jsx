@@ -6,22 +6,20 @@ const ModeToggle = ({ mode, onModeChange }) => {
     <div className="mode-toggle-container">
       <div className="mode-toggle">
         <button
-          className={`toggle-option ${mode === "web" ? "active" : ""}`}
+          className={`toggle-btn ${mode === "web" ? "active" : ""}`}
           onClick={() => onModeChange("web")}
         >
-          Web Developer
+          Web Development
         </button>
         <button
-          className={`toggle-option ${mode === "graphic" ? "active" : ""}`}
+          className={`toggle-btn ${mode === "graphic" ? "active" : ""}`}
           onClick={() => onModeChange("graphic")}
         >
-          Graphic Designer
+          Graphic Design
         </button>
-        <div className={`toggle-slider ${mode === "graphic" ? "slide-right" : ""}`}></div>
       </div>
     </div>
   );
 };
 
 export default ModeToggle;
-

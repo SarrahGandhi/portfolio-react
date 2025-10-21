@@ -15,75 +15,99 @@ const ProjectDetails = ({ mode = "web" }) => {
     {
       _id: "graphic-1",
       title: "Vayu Villa Logo Design",
-      description: "Complete branding package for a luxury resort. This project involved creating a sophisticated logo that captures the essence of relaxation and luxury. The design includes a comprehensive brand identity with color palette, typography guidelines, and application examples across various mediums including business cards, letterheads, and digital platforms.",
-      technologies: ["Adobe Illustrator", "Adobe Photoshop", "Color Theory", "Typography"],
+      description:
+        "Complete branding package for a luxury resort. This project involved creating a sophisticated logo that captures the essence of relaxation and luxury. The design includes a comprehensive brand identity with color palette, typography guidelines, and application examples across various mediums including business cards, letterheads, and digital platforms.",
+      technologies: [
+        "Adobe Illustrator",
+        "Adobe Photoshop",
+        "Color Theory",
+        "Typography",
+      ],
       keyFeatures: [
         "Custom logo design with multiple variations",
         "Comprehensive brand guidelines",
         "Color palette development",
         "Typography selection and pairing",
         "Business card and letterhead design",
-        "Social media template creation"
+        "Social media template creation",
       ],
       featured: true,
       type: "graphic",
       projectUrl: null,
-      githubUrl: null
+      githubUrl: null,
     },
     {
-      _id: "graphic-2", 
+      _id: "graphic-2",
       title: "Slay Coffee Branding",
-      description: "A complete brand identity design for a modern coffee shop. This project focused on creating a bold, contemporary brand that appeals to young professionals and coffee enthusiasts. The design includes logo creation, packaging design, and marketing materials that reflect the energetic and stylish nature of the brand.",
-      technologies: ["Adobe Illustrator", "Adobe InDesign", "Packaging Design", "Brand Strategy"],
+      description:
+        "A complete brand identity design for a modern coffee shop. This project focused on creating a bold, contemporary brand that appeals to young professionals and coffee enthusiasts. The design includes logo creation, packaging design, and marketing materials that reflect the energetic and stylish nature of the brand.",
+      technologies: [
+        "Adobe Illustrator",
+        "Adobe InDesign",
+        "Packaging Design",
+        "Brand Strategy",
+      ],
       keyFeatures: [
         "Modern logo design with coffee-inspired elements",
         "Coffee cup and packaging design",
         "Menu and promotional material design",
         "Social media marketing templates",
         "Store signage concepts",
-        "Brand voice and personality development"
+        "Brand voice and personality development",
       ],
       featured: true,
       type: "graphic",
       projectUrl: null,
-      githubUrl: null
+      githubUrl: null,
     },
     {
       _id: "graphic-3",
       title: "Valentine's Day Campaign",
-      description: "A romantic-themed marketing campaign design created for social media and print advertising. This project involved creating cohesive visual content across multiple platforms while maintaining a consistent romantic aesthetic. The campaign successfully captured the essence of love and celebration through thoughtful design choices.",
-      technologies: ["Adobe Photoshop", "Adobe Illustrator", "Social Media Design", "Print Design"],
+      description:
+        "A romantic-themed marketing campaign design created for social media and print advertising. This project involved creating cohesive visual content across multiple platforms while maintaining a consistent romantic aesthetic. The campaign successfully captured the essence of love and celebration through thoughtful design choices.",
+      technologies: [
+        "Adobe Photoshop",
+        "Adobe Illustrator",
+        "Social Media Design",
+        "Print Design",
+      ],
       keyFeatures: [
         "Social media post templates",
         "Instagram story and highlight covers",
         "Print advertisement designs",
         "Romantic color scheme development",
         "Typography-focused layouts",
-        "Cross-platform design consistency"
+        "Cross-platform design consistency",
       ],
       featured: true,
       type: "graphic",
       projectUrl: null,
-      githubUrl: null
+      githubUrl: null,
     },
     {
       _id: "graphic-4",
       title: "Typography Exploration",
-      description: "An experimental typography project exploring different typeface combinations and creative layouts. This project demonstrates advanced understanding of typography principles, hierarchy, and creative text treatments. Various typographic styles were explored to create visually compelling and readable designs.",
-      technologies: ["Adobe InDesign", "Adobe Illustrator", "Typography", "Layout Design"],
+      description:
+        "An experimental typography project exploring different typeface combinations and creative layouts. This project demonstrates advanced understanding of typography principles, hierarchy, and creative text treatments. Various typographic styles were explored to create visually compelling and readable designs.",
+      technologies: [
+        "Adobe InDesign",
+        "Adobe Illustrator",
+        "Typography",
+        "Layout Design",
+      ],
       keyFeatures: [
         "Multiple typeface explorations",
         "Creative text layout experiments",
         "Hierarchy and readability studies",
         "Custom lettering and modifications",
         "Print and digital applications",
-        "Typography guidelines creation"
+        "Typography guidelines creation",
       ],
       featured: true,
       type: "graphic",
       projectUrl: null,
-      githubUrl: null
-    }
+      githubUrl: null,
+    },
   ];
 
   // Fetch all projects first
@@ -275,7 +299,11 @@ const ProjectDetails = ({ mode = "web" }) => {
                 </div>
               )}
             </div>
-            <h3>{project.type === "graphic" ? "Design Tools Used" : "Technologies Used"}</h3>
+            <h3>
+              {project.type === "graphic"
+                ? "Design Tools Used"
+                : "Technologies Used"}
+            </h3>
             {project?.technologies && (
               <div className="project-languages">
                 <div className="project-languages-scroll">

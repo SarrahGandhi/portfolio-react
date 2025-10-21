@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Header from "./components/Header/Header";
 import Home from "./pages/Home/Home";
 import Landing from "./pages/Landing/Landing";
@@ -31,14 +36,22 @@ const HomePage = ({ mode }) => {
 };
 
 // Layout for pages with header and footer
-const MainLayout = ({ children, mode, onModeChange }) => (
-  <>
-    <Header />
-    <ModeToggle mode={mode} onModeChange={onModeChange} />
-    <main className="content">{children}</main>
-    <Footer />
-  </>
-);
+const MainLayout = ({ children, mode, onModeChange }) => {
+  const location = useLocation();
+  const isProjectDetailsPage = location.pathname.startsWith("/project/");
+  const isResumePage = location.pathname === "/resume";
+
+  return (
+    <>
+      <Header />
+      {!isProjectDetailsPage && !isResumePage && (
+        <ModeToggle mode={mode} onModeChange={onModeChange} />
+      )}
+      <main className="content">{children}</main>
+      <Footer />
+    </>
+  );
+};
 
 // Layout without header and footer for admin pages
 const AdminLayout = ({ children }) => (
@@ -65,16 +78,15 @@ function App() {
             path="/"
             element={<Landing onModeSelect={handleModeChange} />}
           />
-
           {/* Public Routes */}
-          <Route
+          {/* <Route
             path="/home"
             element={
               <MainLayout mode={mode} onModeChange={handleModeChange}>
                 <HomePage mode={mode} />
               </MainLayout>
-            }
-          />
+            } */}
+          {/* */}
           <Route
             path="/resume"
             element={
@@ -91,7 +103,6 @@ function App() {
               </MainLayout>
             }
           />
-
           {/* Admin Routes */}
           <Route
             path="/admin/login"

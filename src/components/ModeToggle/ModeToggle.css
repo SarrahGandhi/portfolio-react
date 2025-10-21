@@ -6,66 +6,56 @@
 }
 
 .mode-toggle {
-  position: relative;
   display: flex;
-  background: #fff;
-  border: 5px solid #000;
+  border: 2px solid #000;
   border-radius: 0;
-  overflow: hidden;
+  background: #fff;
   box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 }
 
-.toggle-option {
-  position: relative;
-  z-index: 2;
+.toggle-btn {
   padding: 15px 30px;
-  background: transparent;
-  border: none;
   font-size: 18px;
-  font-weight: bold;
-  color: #000;
+  font-family: inherit;
+  border: none;
+  background: #fff;
   cursor: pointer;
-  transition: color 0.3s ease;
-  min-width: 160px;
-  text-align: center;
-}
-
-.toggle-option.active {
+  transition: all 0.3s ease;
   color: #000;
+  border-right: 2px solid #000;
 }
 
-.toggle-option:not(.active) {
-  color: #666;
+.toggle-btn:last-child {
+  border-right: none;
 }
 
-.toggle-option:hover:not(.active) {
-  color: #333;
-}
-
-.toggle-slider {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100%;
+.toggle-btn:hover {
   background: #ffea00;
-  transition: transform 0.3s ease;
-  z-index: 1;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: #000;
+  text-underline-offset: 5px;
 }
 
-.toggle-slider.slide-right {
-  transform: translateX(100%);
+.toggle-btn.active {
+  background: #ffea00;
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: #000;
+  text-underline-offset: 5px;
 }
 
 @media screen and (max-width: 768px) {
   .mode-toggle-container {
     padding: 0 20px;
+    margin: 15px 0;
   }
-  
-  .toggle-option {
+
+  .toggle-btn {
     padding: 12px 20px;
     font-size: 16px;
-    min-width: 140px;
   }
 }
 
@@ -73,11 +63,9 @@
   .mode-toggle-container {
     padding: 0 10px;
   }
-  
-  .toggle-option {
+
+  .toggle-btn {
     padding: 10px 15px;
     font-size: 14px;
-    min-width: 120px;
   }
 }
-

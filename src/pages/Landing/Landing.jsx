@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Landing.css";
 import caricatureImg from "../../assets/images/carcicature.png";
 import Header from "../../components/Header/Header";
+import Home from "../Home/Home";
+import Portfolio from "../../components/Portfolio/Portfolio";
+import FunFacts from "../../components/FunFacts/FunFacts";
+import Contact from "../../components/Contact/Contact";
+import Footer from "../../components/Footer/Footer";
 
 const Landing = ({ onModeSelect }) => {
   const navigate = useNavigate();
   const [selectedMode, setSelectedMode] = useState("web");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+  const homeContentRef = useRef(null);
 
   // Cleanup function to reset body overflow
   useEffect(() => {
@@ -18,27 +25,35 @@ const Landing = ({ onModeSelect }) => {
   }, []);
 
   const handleModeSelection = () => {
-    // First scroll to top instantly
-    window.scrollTo({
-      top: 0,
-      behavior: "instant",
-    });
+    setIsAnimating(true);
+    onModeSelect(selectedMode);
 
-    // Prevent scrolling during animation
-    document.body.style.overflow = "hidden";
-
-    // Small delay then start animation
     setTimeout(() => {
-      setIsAnimating(true);
-    }, 50);
+      setShowContent(true);
+      setIsAnimating(false);
 
-    // Wait for scroll-up animation then navigate
-    setTimeout(() => {
-      onModeSelect(selectedMode);
-      // Reset overflow before navigation
-      document.body.style.overflow = "auto";
-      navigate("/home");
-    }, 850); // 850ms total delay for smooth transition
+      // Automatically scroll to the main content after it appears
+      setTimeout(() => {
+        if (homeContentRef.current) {
+          homeContentRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100); // Small delay to ensure content is rendered
+    }, 500);
+  };
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleModeChange = (newMode) => {
+    setSelectedMode(newMode);
+    onModeSelect(newMode);
   };
 
   const toggleMode = (mode) => {
@@ -46,53 +61,69 @@ const Landing = ({ onModeSelect }) => {
   };
 
   return (
-    <div
-      className={`landing-container ${isAnimating ? "page-transitioning" : ""}`}
-    >
-      <Header />
+    <div className="landing-page">
+      <div
+        className={`landing-container ${
+          isAnimating ? "page-transitioning" : ""
+        }`}
+      >
+        <Header scrollToSection={scrollToSection} showContent={showContent} />
 
-      <main className="landing-main">
-        <h1 className="landing-title">Hi, I am Sarrah Gandhi.</h1>
+        <main className="landing-main">
+          <h1 className="landing-title">Hi, I am Sarrah Gandhi.</h1>
 
-        <div className="character-image">
-          <img src={caricatureImg} alt="Sarrah Gandhi Character" />
-        </div>
+          <div className="character-image">
+            <img src={caricatureImg} alt="Sarrah Gandhi Character" />
+          </div>
 
-        <div
-          className={`role-selection ${
-            selectedMode === "web" ? "web-selected" : ""
-          }`}
-        >
-          <button
-            className={`role-btn graphic-designer ${
-              selectedMode === "graphic" ? "active" : ""
+          <div
+            className={`role-selection ${
+              selectedMode === "web" ? "web-selected" : ""
             }`}
-            onClick={() => toggleMode("graphic")}
+          >
+            <button
+              className={`role-btn graphic-designer ${
+                selectedMode === "graphic" ? "active" : ""
+              }`}
+              onClick={() => toggleMode("graphic")}
+              disabled={isAnimating}
+            >
+              Graphic Designer
+            </button>
+            <button
+              className={`role-btn web-developer ${
+                selectedMode === "web" ? "active" : ""
+              }`}
+              onClick={() => toggleMode("web")}
+              disabled={isAnimating}
+            >
+              Web Developer
+            </button>
+          </div>
+
+          <p className="selection-text">
+            Select what you would like to explore
+          </p>
+
+          <button
+            className={`lets-go-btn ${isAnimating ? "loading" : ""}`}
+            onClick={handleModeSelection}
             disabled={isAnimating}
           >
-            Graphic Designer
+            {isAnimating ? "Loading..." : "Let's Gooo!"}
           </button>
-          <button
-            className={`role-btn web-developer ${
-              selectedMode === "web" ? "active" : ""
-            }`}
-            onClick={() => toggleMode("web")}
-            disabled={isAnimating}
-          >
-            Web Developer
-          </button>
+        </main>
+      </div>
+
+      {showContent && (
+        <div className="main-content" ref={homeContentRef}>
+          <Home mode={selectedMode} />
+          <Portfolio mode={selectedMode} />
+          <FunFacts />
+          <Contact />
+          <Footer />
         </div>
-
-        <p className="selection-text">Select what you would like to explore</p>
-
-        <button
-          className={`lets-go-btn ${isAnimating ? "loading" : ""}`}
-          onClick={handleModeSelection}
-          disabled={isAnimating}
-        >
-          {isAnimating ? "Loading..." : "Let's Gooo!"}
-        </button>
-      </main>
+      )}
     </div>
   );
 };
